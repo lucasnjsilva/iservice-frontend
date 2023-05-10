@@ -18,9 +18,9 @@ const classes = {
     "rounded",
     "border",
     "border-gray-300",
-    "focus:border-indigo-500",
+    "focus:border-emerald-500",
     "focus:ring-2",
-    "focus:ring-indigo-200",
+    "focus:ring-emerald-200",
     "text-base",
     "outline-none",
     "text-gray-700",
@@ -33,13 +33,13 @@ const classes = {
   ],
   button: [
     "w-full",
-    "bg-indigo-600",
+    "bg-emerald-600",
     "rounded",
     "shadow",
     "p-2",
     "mt-12",
     "text-slate-200",
-    "hover:bg-indigo-700",
+    "hover:bg-emerald-700",
   ],
 };
 

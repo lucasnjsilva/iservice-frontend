@@ -1,12 +1,10 @@
 "use client";
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import ServiceCard from "@/components/ServiceCard";
 import ProfessionalCard from "@/components/ProfessionalCard";
 import SearchHomePage from "@/components/SearchHomePage";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
+import Layout from "./layout";
 
 export default function Homepage() {
   const useClasses = useStyle(classes);
@@ -14,9 +12,7 @@ export default function Homepage() {
     "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80";
 
   return (
-    <main className={useClasses.main}>
-      <Navbar />
-
+    <Layout>
       <section className={useClasses.section}>
         <div className={useClasses.wrapper}>
           <section className={useClasses.container}>
@@ -112,8 +108,6 @@ export default function Homepage() {
           />
         </div>
       </section>
-
-      <Footer />
-    </main>
+    </Layout>
   );
 }

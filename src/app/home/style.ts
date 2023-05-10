@@ -34,7 +34,7 @@ const classes = {
   subtitle: [
     "mb-4",
     "font-semibold",
-    "text-indigo-500",
+    "text-emerald-500",
     "md:mb-6",
     "md:text-lg",
     "xl:text-xl",
@@ -73,7 +73,7 @@ const classes = {
     "text-center",
     "text-lg",
     "font-bold",
-    "text-indigo-500",
+    "text-emerald-500",
     "md:text-left",
     "md:text-xl",
   ],
