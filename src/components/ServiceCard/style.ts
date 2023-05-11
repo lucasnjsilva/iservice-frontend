@@ -8,7 +8,7 @@ const classes = {
     "border",
     "border-gray-100",
     "p-4",
-    "shadow-xl",
+    "hover:shadow",
     "sm:p-6",
     "lg:p-8",
   ],

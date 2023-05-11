@@ -40,14 +40,12 @@ export default function Navbar() {
           <div className={useClasses.desktopButtonGroup}>
             <Link href="/signup">
               <button className={useClasses.desktopSignUpButton}>
-                Sign Up
+                Cadastrar
               </button>
             </Link>
 
             <Link href="/signin">
-              <button className={useClasses.desktopSignInButton}>
-                Sign In
-              </button>
+              <button className={useClasses.desktopSignInButton}>Entrar</button>
             </Link>
           </div>
 
@@ -61,11 +59,13 @@ export default function Navbar() {
         <div className={`${open ? "block" : "hidden"} sm:hidden mt-12 mx-auto`}>
           <div className={useClasses.mobileButtonGroup}>
             <Link href="/signup">
-              <button className={useClasses.mobileSignUpButton}>Sign Up</button>
+              <button className={useClasses.mobileSignUpButton}>
+                Cadastrar
+              </button>
             </Link>
 
             <Link href="/signin">
-              <button className={useClasses.mobileSignInButton}>Sign In</button>
+              <button className={useClasses.mobileSignInButton}>Entrar</button>
             </Link>
           </div>
           <hr className="mt-12" />

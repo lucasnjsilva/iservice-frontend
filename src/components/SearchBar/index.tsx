@@ -1,29 +1,22 @@
-"use client";
-
-import { useEffect } from "react";
-import classes from "./style";
 import useStyle from "@/utils/cssHandler";
+import React from "react";
+import classes from "./style";
+import Link from "next/link";
 
-function SearchHomePage() {
+function SearchBar() {
   const useClasses = useStyle(classes);
 
   return (
-    <>
-      <div className={useClasses.container}>
-        <div className={useClasses.inputGroup}>
-          <label htmlFor="services" className={useClasses.label}>
-            Serviços
+    <main className={useClasses.area}>
+      <div className={useClasses.inputGroup}>
+        <div>
+          <label htmlFor="name" className={useClasses.label}>
+            Serviço
           </label>
-
-          <input
-            type="text"
-            id="services"
-            className={useClasses.input}
-            placeholder="Serviços"
-          ></input>
+          <input name="name" type="text" className={useClasses.input} />
         </div>
 
-        <div className={useClasses.inputGroup}>
+        <div>
           <label htmlFor="services" className={useClasses.label}>
             Categorias
           </label>
@@ -40,7 +33,7 @@ function SearchHomePage() {
           </datalist>
         </div>
 
-        <div className={useClasses.inputGroup}>
+        <div>
           <label htmlFor="services" className={useClasses.label}>
             Estado
           </label>
@@ -57,7 +50,7 @@ function SearchHomePage() {
           </datalist>
         </div>
 
-        <div className={useClasses.inputGroup}>
+        <div>
           <label htmlFor="services" className={useClasses.label}>
             Cidade
           </label>
@@ -75,10 +68,14 @@ function SearchHomePage() {
           </datalist>
         </div>
 
-        <button className={useClasses.button}>Pesquisar</button>
+        <div>
+          <Link href="#" className={useClasses.button}>
+            <button>Pesquisar</button>
+          </Link>
+        </div>
       </div>
-    </>
+    </main>
   );
 }
 
-export default SearchHomePage;
+export default SearchBar;

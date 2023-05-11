@@ -1,5 +1,5 @@
 const classes = {
-  section: ["bg-white", "sticky", "top-0", "z-50"],
+  section: ["bg-white", "sticky", "top-0", "z-40"],
   nav: ["2xl:container", "2xl:mx-auto", "sm:py-6", "sm:px-7", "py-5", "px-4"],
   container: ["flex", "justify-between"],
   brandContainer: ["flex", "space-x-3", "items-center"],

@@ -1,14 +1,16 @@
+"use client";
+
+import { ReactNode } from "react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { ReactNode } from "react";
 import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 
-interface HomeLayoutProps {
+interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: HomeLayoutProps) {
+export default function Layout({ children }: LayoutProps) {
   const useClasses = useStyle(classes);
 
   return (
