@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Link from "next/link";
-import BurgerButton from "./burgerButton";
+import BurgerButton from "../BurgerButton";
 
 export default function Navbar() {
   const useClasses = useStyle(classes);

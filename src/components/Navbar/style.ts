@@ -53,7 +53,6 @@ const classes = {
     "focus:ring-2",
     "focus:ring-offset-2",
     "focus:ring-gray-800",
-    "",
     "justify-center",
     "items-center",
     "sm:hidden",
