@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
-import Layout from "../../layout/index";
+import Layout from "../../layouts/unauthenticated/index";
 import SearchBar from "@/components/SearchBar";
 import Image from "next/image";
 import ScheduleModal from "@/components/ScheduleModal";

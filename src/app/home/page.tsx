@@ -4,7 +4,7 @@ import ProfessionalCard from "@/components/ProfessionalCard";
 import SearchHomePage from "@/components/SearchHomePage";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
-import Layout from "../layout/index";
+import Layout from "../layouts/unauthenticated/index";
 
 export default function Homepage() {
   const useClasses = useStyle(classes);

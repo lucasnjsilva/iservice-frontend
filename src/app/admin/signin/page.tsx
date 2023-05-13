@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./style";
 import useStyle from "@/utils/cssHandler";
-import Layout from "../../layout/index";
+import Layout from "../../layouts/unauthenticated/index";
 
 function Login() {
   const useClasses = useStyle(classes);

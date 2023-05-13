@@ -1,21 +1,21 @@
 "use client";
-import React, { useState } from "react";
-import { Bars3CenterLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import React, { useState, useContext } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import BurgerButton from "../BurgerButton";
+import { SidebarContext } from "@/contexts/SidebarContext";
 
-type PropTypes = {
-  items: {
-    label: string;
-    icon: JSX.Element;
-    // onClick: () => void;
-  }[];
-};
+// type PropTypes = {
+//   items: {
+//     label: string;
+//     icon: JSX.Element;
+//     onClick: () => void;
+//   }[];
+// };
 
 export default function Sidebar() {
   const useClasses = useStyle(classes);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useContext(SidebarContext);
 
   const handleMenu = () => setOpen(!open);
 

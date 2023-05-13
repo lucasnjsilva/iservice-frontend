@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Layout from "../layout/index";
+import Layout from "../layouts/unauthenticated/index";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Link from "next/link";
