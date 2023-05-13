@@ -2,7 +2,7 @@ const classes = {
   main: [
     "bg-slate-50",
     "h-screen",
-    "pl-64",
+    "pl-80",
     "p-16",
     "pt-8",
     "w-full",
