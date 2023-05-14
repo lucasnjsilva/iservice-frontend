@@ -7,9 +7,8 @@ function Dashboard() {
   const useClasses = useStyle(classes);
 
   return (
-    <Layout>
+    <Layout title="Dashboard">
       <main>
-        <h1>Dashboard</h1>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam,
           eligendi! Et inventore voluptas adipisci eum sint deserunt nesciunt
