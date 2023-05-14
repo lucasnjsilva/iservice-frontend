@@ -83,28 +83,7 @@ const classes = {
     "duration-300",
     "group-open:-rotate-180",
   ],
-  footer: ["sticky", "inset-x-0", "bottom-0", "border-t", "border-gray-100"],
-  profileLink: [
-    "flex",
-    "items-center",
-    "gap-2",
-    "bg-white",
-    "p-4",
-    "hover:bg-gray-50",
-  ],
-  profileImage: ["h-10", "w-10", "rounded-full", "object-cover"],
-  logoutButton: [
-    "flex",
-    "w-full",
-    "items-center",
-    "gap-2",
-    "rounded-lg",
-    "px-4",
-    "py-2",
-    "text-gray-500",
-    "hover:bg-gray-100",
-    "hover:text-gray-700",
-  ],
+  menuSelectNav: ["mt-2", "flex", "flex-col", "px-4"],
 };
 
 export default classes;
