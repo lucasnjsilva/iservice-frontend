@@ -3,6 +3,44 @@ import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Layout from "@/app/layouts/authenticated";
 import StatsCard from "@/components/StatsCard";
+import Table from "@/components/Table";
+import dateFormatter from "@/utils/dateFormatter";
+
+const table = {
+  head: [
+    "Profissional",
+    "Cliente",
+    "Serviço",
+    "Data de Solicitação",
+    "Data de Agendamento",
+  ],
+  body: [
+    {
+      id: "a1",
+      provider: "João Carlos",
+      customer: "Tatiane Silva",
+      service: "Mecânico",
+      solicitationDate: dateFormatter("2023-05-12"),
+      scheduleDate: dateFormatter("2023-05-13"),
+    },
+    {
+      id: "a2",
+      provider: "João Carlos",
+      customer: "Tatiane Silva",
+      service: "Mecânico",
+      solicitationDate: dateFormatter("2023-05-12"),
+      scheduleDate: dateFormatter("2023-05-13"),
+    },
+    {
+      id: "a3",
+      provider: "João Carlos",
+      customer: "Tatiane Silva",
+      service: "Mecânico",
+      solicitationDate: dateFormatter("2023-05-12"),
+      scheduleDate: dateFormatter("2023-05-13"),
+    },
+  ],
+};
 
 function Dashboard() {
   const useClasses = useStyle(classes);
@@ -11,8 +49,9 @@ function Dashboard() {
     <Layout title="Dashboard">
       <section>
         <h2 className={useClasses.sectionTitle}>
-          Estatísticas Totais{" "}
+          Estatísticas Totais
           <span className="text-sm font-normal text-slate-500">
+            {" "}
             (clique em algum card para ver mais)
           </span>
         </h2>
@@ -26,10 +65,9 @@ function Dashboard() {
       </section>
 
       <div className="mt-16">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam,
-        eligendi! Et inventore voluptas adipisci eum sint deserunt nesciunt
-        impedit temporibus, eligendi sequi earum nemo. Officiis id beatae illum
-        recusandae qui!
+        <h2 className={useClasses.sectionTitle}>Últimos negociações</h2>
+
+        <Table table={table} />
       </div>
     </Layout>
   );
