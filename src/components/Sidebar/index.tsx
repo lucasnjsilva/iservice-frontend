@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AdminSidebar from "./admin";
-import MySidebar from "./sidebar";
 import CustomerSidebar from "./customer";
 import ProviderSidebar from "./provider";
 
@@ -25,7 +24,7 @@ function Sidebar() {
       id: "7e07741a-ff0b-4013-b605-ff910c5368c7",
       name: "Lucas J.",
       email: "lucasnathanj@gmail.com",
-      role: UserRoles.admin,
+      role: UserRoles.provider,
     };
 
     setUser(data);

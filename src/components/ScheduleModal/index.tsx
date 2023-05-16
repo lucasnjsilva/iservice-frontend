@@ -41,11 +41,23 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose }) => {
                 Para qual dia deseja agendar o serviço?
               </Dialog.Title>
 
-              <div className="my-12">
-                <label htmlFor="name" className={useClasses.label}>
+              <div className="mt-12">
+                <label htmlFor="service" className={useClasses.label}>
+                  Selecione o serviço
+                </label>
+
+                <select id="service" className={useClasses.input}>
+                  <option value="blank">Selecione o serviço</option>
+                  <option value="mecanico">Mecânico</option>
+                  <option value="eletricista">Eletricista</option>
+                </select>
+              </div>
+
+              <div className="my-8">
+                <label htmlFor="date" className={useClasses.label}>
                   Selecione a melhor data para você
                 </label>
-                <input name="name" type="date" className={useClasses.input} />
+                <input name="date" type="date" className={useClasses.input} />
               </div>
 
               <div className={useClasses.buttonGroup}>

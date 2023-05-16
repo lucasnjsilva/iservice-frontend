@@ -9,7 +9,7 @@ import Image from "next/image";
 import ScheduleModal from "@/components/ScheduleModal";
 import UnauthenticatedModal from "@/components/UnauthenticatedModal";
 
-export default function Homepage() {
+export default function Provider() {
   const useClasses = useStyle(classes);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,7 +20,7 @@ export default function Homepage() {
 
   return (
     <>
-      <UnauthenticatedModal isOpen={isOpen} onClose={handleModal} />
+      <ScheduleModal isOpen={isOpen} onClose={handleModal} />
 
       <Layout>
         <div className={useClasses.container}>
@@ -52,6 +52,15 @@ export default function Homepage() {
                   <h3 className={useClasses.name}>Luiz Carlos</h3>
                   <div className={useClasses.location}>Caruaru, PE</div>
                   <div className={useClasses.job}>Técnico Eletricista</div>
+                  <div className={useClasses.services}>
+                    <a href="">
+                      <span className={useClasses.service}>Mecânico</span>
+                    </a>
+
+                    <a href="">
+                      <span className={useClasses.service}>Eletricista</span>
+                    </a>
+                  </div>
                 </div>
 
                 <div className={useClasses.descriptionArea}>
