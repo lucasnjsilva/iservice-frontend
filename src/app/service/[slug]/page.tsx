@@ -5,6 +5,7 @@ import classes from "./style";
 import SearchBar from "@/components/SearchBar";
 import Image from "next/image";
 import EvaluationCard from "@/components/EvaluationCard";
+import Pagination from "@/components/Pagination";
 
 function Service() {
   const useClasses = useStyle(classes);
@@ -22,62 +23,66 @@ function Service() {
 
       <section className={useClasses.section}>
         <div className={useClasses.cardWrapper}>
-          <div className={useClasses.cardContainer}>
-            <div className={useClasses.imageContainer}>
-              <Image
-                alt="..."
-                src={professionalProfile}
-                className={useClasses.image}
-                width={1000}
-                height={1000}
+          <div className={useClasses.body}>
+            <div className={useClasses.cardContainer}>
+              <div className={useClasses.imageContainer}>
+                <Image
+                  alt="..."
+                  src={professionalProfile}
+                  className={useClasses.image}
+                  width={1000}
+                  height={1000}
+                />
+              </div>
+
+              <div className={useClasses.infoContainer}>
+                <h3 className={useClasses.name}>
+                  Felipe Serra
+                  <span className={useClasses.service}>Mecânico</span>
+                </h3>
+                <p className={useClasses.description}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                  nisi, nulla sed doloremque necessitatibus optio aut ea, quod
+                  praesentium debitis in, repudiandae ex ut culpa voluptate
+                  commodi odit fugiat impedit.
+                </p>
+
+                <div>
+                  <button className={useClasses.button}>Agendar serviço</button>
+                </div>
+              </div>
+            </div>
+
+            <hr className={useClasses.divisor} />
+            <div className={useClasses.grid}>
+              <EvaluationCard
+                title="teste"
+                comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                star={3}
+              />
+              <EvaluationCard
+                title="teste"
+                comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                star={2}
+              />
+              <EvaluationCard
+                title="teste"
+                comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                star={4}
+              />
+              <EvaluationCard
+                title="teste"
+                comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                star={1}
+              />
+              <EvaluationCard
+                title="teste"
+                comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                star={5}
               />
             </div>
 
-            <div className={useClasses.infoContainer}>
-              <h3 className={useClasses.name}>
-                Felipe Serra
-                <span className={useClasses.service}>Mecânico</span>
-              </h3>
-              <p className={useClasses.description}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nisi, nulla sed doloremque necessitatibus optio aut ea, quod
-                praesentium debitis in, repudiandae ex ut culpa voluptate
-                commodi odit fugiat impedit.
-              </p>
-
-              <div>
-                <button className={useClasses.button}>Agendar serviço</button>
-              </div>
-
-              <hr className={useClasses.divisor} />
-              <div className={useClasses.grid}>
-                <EvaluationCard
-                  title="teste"
-                  comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                  star={3}
-                />
-                <EvaluationCard
-                  title="teste"
-                  comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                  star={2}
-                />
-                <EvaluationCard
-                  title="teste"
-                  comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                  star={4}
-                />
-                <EvaluationCard
-                  title="teste"
-                  comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                  star={1}
-                />
-                <EvaluationCard
-                  title="teste"
-                  comment="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                  star={5}
-                />
-              </div>
-            </div>
+            <Pagination page={1} total={84} />
           </div>
         </div>
       </section>
