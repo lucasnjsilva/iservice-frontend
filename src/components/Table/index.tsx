@@ -1,6 +1,7 @@
 import useStyle from "@/utils/cssHandler";
 import React from "react";
 import classes from "./style";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 type PropTypes = {
   table: {
@@ -10,9 +11,12 @@ type PropTypes = {
       [key: string]: any;
     }>;
   };
+  actions: boolean;
+  handleEdit?: any;
+  handleDelete?: any;
 };
 
-function Table({ table }: PropTypes) {
+function Table({ table, actions, handleEdit, handleDelete }: PropTypes) {
   const useClasses = useStyle(classes);
 
   return (
@@ -25,6 +29,8 @@ function Table({ table }: PropTypes) {
                 {item}
               </th>
             ))}
+
+            {actions ? <th>Ações</th> : null}
           </tr>
         </thead>
 
@@ -39,6 +45,28 @@ function Table({ table }: PropTypes) {
                     {value}
                   </td>
                 ))}
+
+                {actions ? (
+                  <td>
+                    <button className={useClasses.action}>
+                      <PencilSquareIcon
+                        width={20}
+                        height={20}
+                        className={useClasses.actionIcon}
+                        onClick={() => handleEdit(id)}
+                      />
+                    </button>
+
+                    <button className={useClasses.action}>
+                      <TrashIcon
+                        width={20}
+                        height={20}
+                        className={useClasses.actionIcon}
+                        onClick={() => handleDelete(id)}
+                      />
+                    </button>
+                  </td>
+                ) : null}
               </tr>
             );
           })}

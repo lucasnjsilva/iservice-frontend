@@ -5,12 +5,15 @@ import {
   ListBulletIcon,
   UserIcon,
   ArrowLeftOnRectangleIcon,
+  UsersIcon,
+  UserGroupIcon,
+  PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
 
 export const admin = [
   {
     label: "Dashboard",
-    href: "/dashboard",
+    href: "/admin/dashboard",
     icon: <ChartBarIcon width={20} height={20} />,
     items: null,
   },
@@ -21,19 +24,37 @@ export const admin = [
     items: [
       {
         label: "Listar",
-        href: "/categories",
+        href: "/admin/categories",
         icon: <ListBulletIcon width={20} height={20} />,
       },
       {
         label: "Criar nova",
-        href: "/categories/new",
+        href: "/admin/categories/new",
         icon: <PlusIcon width={20} height={20} />,
       },
     ],
   },
   {
+    label: "Clientes",
+    href: "/admin/customers",
+    icon: <UsersIcon width={20} height={20} />,
+    items: null,
+  },
+  {
+    label: "Prestadores",
+    href: "/admin/providers",
+    icon: <UserGroupIcon width={20} height={20} />,
+    items: null,
+  },
+  {
+    label: "Atendimentos",
+    href: "/admin/attendances",
+    icon: <PresentationChartLineIcon width={20} height={20} />,
+    items: null,
+  },
+  {
     label: "Minha Conta",
-    href: "/my_account",
+    href: "/admin/my_account",
     icon: <UserIcon width={20} height={20} />,
     items: null,
   },

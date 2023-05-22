@@ -5,16 +5,19 @@ import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Sidebar from "@/components/Sidebar";
 import AdminSidebar from "@/components/Sidebar/admin";
+import { useRouter } from "next/router";
 
 interface LayoutProps {
   children: ReactNode;
   title: string;
+  path?: string;
   admin?: boolean;
 }
 
 export default function Layout({
   children,
   title,
+  path,
   admin = false,
 }: LayoutProps) {
   const useClasses = useStyle(classes);

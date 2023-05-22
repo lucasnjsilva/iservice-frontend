@@ -67,7 +67,7 @@ function Dashboard() {
       <div className="mt-16">
         <h2 className={useClasses.sectionTitle}>Últimos negociações</h2>
 
-        <Table table={table} />
+        <Table table={table} actions={false} />
       </div>
     </Layout>
   );
