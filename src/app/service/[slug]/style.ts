@@ -40,7 +40,7 @@ const classes = {
     "max-sm:items-center",
     "max-sm:pt-4",
   ],
-  name: ["font-bold"],
+  name: ["font-bold", "hover:text-gray-600"],
   service: [
     "whitespace-nowrap",
     "rounded",

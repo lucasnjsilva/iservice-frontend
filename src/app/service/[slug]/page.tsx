@@ -37,7 +37,7 @@ function Service() {
 
               <div className={useClasses.infoContainer}>
                 <h3 className={useClasses.name}>
-                  Felipe Serra
+                  <a href="#">Felipe Serra</a>
                   <span className={useClasses.service}>Mecânico</span>
                 </h3>
                 <p className={useClasses.description}>

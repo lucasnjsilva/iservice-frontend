@@ -46,7 +46,7 @@ function Dashboard() {
   const useClasses = useStyle(classes);
 
   return (
-    <Layout title="Dashboard">
+    <Layout title="Dashboard" admin={true}>
       <section>
         <h2 className={useClasses.sectionTitle}>
           Estatísticas Totais
