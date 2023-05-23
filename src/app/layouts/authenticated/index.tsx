@@ -5,7 +5,6 @@ import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Sidebar from "@/components/Sidebar";
 import AdminSidebar from "@/components/Sidebar/admin";
-import { useRouter } from "next/router";
 
 interface LayoutProps {
   children: ReactNode;

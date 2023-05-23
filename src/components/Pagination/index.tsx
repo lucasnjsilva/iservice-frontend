@@ -5,18 +5,21 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 type PaginationProps = {
   page: number;
-  total: number;
+  perPage: number;
+  totalItems: number;
 };
 
-function Pagination({ page, total }: PaginationProps) {
+function Pagination({ page, perPage, totalItems }: PaginationProps) {
   const useClasses = useStyle(classes);
 
   const renderPageButtons = () => {
     const buttons: JSX.Element[] = [];
 
+    const totalPages = Math.ceil(totalItems / perPage);
+
     // Verifica se há menos de 5 páginas no total
-    if (total <= 5) {
-      for (let i = 1; i <= total; i++) {
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
         buttons.push(renderPageButton(i));
       }
     } else {
@@ -27,8 +30,8 @@ function Pagination({ page, total }: PaginationProps) {
         }
       }
       // Página atual está no final
-      else if (page >= total - 2) {
-        for (let i = total - 4; i <= total; i++) {
+      else if (page >= totalPages - 2) {
+        for (let i = totalPages - 4; i <= totalPages; i++) {
           buttons.push(renderPageButton(i));
         }
       }

@@ -82,7 +82,7 @@ function Service() {
               />
             </div>
 
-            <Pagination page={1} total={84} />
+            <Pagination page={1} perPage={20} totalItems={50} />
           </div>
         </div>
       </section>
