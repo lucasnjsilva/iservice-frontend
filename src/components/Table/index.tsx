@@ -1,7 +1,8 @@
+import React, { useState } from "react";
 import useStyle from "@/utils/cssHandler";
-import React from "react";
 import classes from "./style";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import DeleteModal from "../DeleteModal";
 
 type PropTypes = {
   table: {
@@ -18,61 +19,80 @@ type PropTypes = {
 
 function Table({ table, actions, handleEdit, handleDelete }: PropTypes) {
   const useClasses = useStyle(classes);
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemId, setItemId] = useState<string>("");
+
+  const handleModal = (id?: string) => {
+    if (id) {
+      setItemId(id);
+    }
+
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <div className={useClasses.container}>
-      <table className={useClasses.table}>
-        <thead className={useClasses.thead}>
-          <tr>
-            {table.head.map((item, index) => (
-              <th key={index} className={useClasses.th}>
-                {item}
-              </th>
-            ))}
+    <>
+      <DeleteModal
+        isOpen={isOpen}
+        onClose={handleModal}
+        onDelete={handleDelete}
+        id={itemId}
+      />
 
-            {actions ? <th>Ações</th> : null}
-          </tr>
-        </thead>
+      <div className={useClasses.container}>
+        <table className={useClasses.table}>
+          <thead className={useClasses.thead}>
+            <tr>
+              {table.head.map((item, index) => (
+                <th key={index} className={useClasses.th}>
+                  {item}
+                </th>
+              ))}
 
-        <tbody className={useClasses.tbody}>
-          {table.body.map((item) => {
-            const { id, ...data } = item;
+              {actions ? <th>Ações</th> : null}
+            </tr>
+          </thead>
 
-            return (
-              <tr key={id}>
-                {Object.values(data).map((value, index) => (
-                  <td key={index} className={useClasses.td}>
-                    {value}
-                  </td>
-                ))}
+          <tbody className={useClasses.tbody}>
+            {table.body.map((item) => {
+              const { id, ...data } = item;
 
-                {actions ? (
-                  <td>
-                    <button className={useClasses.action}>
-                      <PencilSquareIcon
-                        width={20}
-                        height={20}
-                        className={useClasses.actionIcon}
-                        onClick={() => handleEdit(id)}
-                      />
-                    </button>
+              return (
+                <tr key={id}>
+                  {Object.values(data).map((value, index) => (
+                    <td key={index} className={useClasses.td}>
+                      {value}
+                    </td>
+                  ))}
 
-                    <button className={useClasses.action}>
-                      <TrashIcon
-                        width={20}
-                        height={20}
-                        className={useClasses.actionIcon}
-                        onClick={() => handleDelete(id)}
-                      />
-                    </button>
-                  </td>
-                ) : null}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                  {actions ? (
+                    <td>
+                      <button className={useClasses.action}>
+                        <PencilSquareIcon
+                          width={20}
+                          height={20}
+                          className={useClasses.actionIcon}
+                          onClick={() => handleEdit(id)}
+                        />
+                      </button>
+
+                      <button className={useClasses.action}>
+                        <TrashIcon
+                          width={20}
+                          height={20}
+                          className={useClasses.actionIcon}
+                          onClick={() => handleModal(id)}
+                        />
+                      </button>
+                    </td>
+                  ) : null}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 

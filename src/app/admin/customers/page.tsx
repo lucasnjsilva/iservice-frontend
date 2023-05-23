@@ -1,15 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import dateFormatter from "@/utils/dateFormatter";
 import Pagination from "@/components/Pagination";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
+import DeleteModal from "@/components/DeleteModal";
 
 function Customers() {
   const useClasses = useStyle(classes);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const [table, setTable] = useState<any>();
   const [search, setSearch] = useState<string>("");
@@ -46,9 +50,7 @@ function Customers() {
     });
   }, []);
 
-  const handleEdit = (id: string) => {
-    return console.log(id);
-  };
+  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
 
   const handleDelete = (id: string) => {
     return console.log(id);
