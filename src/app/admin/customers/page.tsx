@@ -8,7 +8,6 @@ import dateFormatter from "@/utils/dateFormatter";
 import Pagination from "@/components/Pagination";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
-import DeleteModal from "@/components/DeleteModal";
 
 function Customers() {
   const useClasses = useStyle(classes);
