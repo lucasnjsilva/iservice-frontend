@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";

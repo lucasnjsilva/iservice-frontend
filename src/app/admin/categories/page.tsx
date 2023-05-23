@@ -3,8 +3,11 @@
 import React from "react";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
+import { useRouter, usePathname } from "next/navigation";
 
 function Categories() {
+  const router = useRouter();
+  const pathname = usePathname();
   const table = {
     head: ["Nome"],
     body: [
@@ -23,9 +26,7 @@ function Categories() {
     ],
   };
 
-  const handleEdit = (id: string) => {
-    return console.log(id);
-  };
+  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
 
   const handleDelete = (id: string) => {
     return console.log(id);
