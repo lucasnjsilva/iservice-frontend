@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  EyeIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import DeleteModal from "../DeleteModal";
 
 type PropTypes = {
@@ -14,12 +18,21 @@ type PropTypes = {
       [key: string]: any;
     }>;
   };
-  actions: boolean;
+  actions:
+    | boolean
+    | {
+        view?: boolean;
+        edit?: boolean;
+        delete?: boolean;
+      };
   handleEdit?: any;
   handleDelete?: any;
+  handleView?: any;
 };
 
-function Table({ table, actions, handleEdit, handleDelete }: PropTypes) {
+function Table(props: PropTypes) {
+  const { table, actions, handleView, handleEdit, handleDelete } = props;
+
   const useClasses = useStyle(classes);
   const [isOpen, setIsOpen] = useState(false);
   const [itemId, setItemId] = useState<string>("");
@@ -30,6 +43,82 @@ function Table({ table, actions, handleEdit, handleDelete }: PropTypes) {
     }
 
     setIsOpen(!isOpen);
+  };
+
+  const renderActions = (id: string) => {
+    if (typeof actions === "boolean" && actions === true) {
+      return (
+        <td>
+          <button className={useClasses.action}>
+            <EyeIcon
+              width={20}
+              height={20}
+              className={useClasses.actionIcon}
+              onClick={() => handleView(id)}
+            />
+          </button>
+
+          <button className={useClasses.action}>
+            <PencilSquareIcon
+              width={20}
+              height={20}
+              className={useClasses.actionIcon}
+              onClick={() => handleEdit(id)}
+            />
+          </button>
+
+          <button className={useClasses.action}>
+            <TrashIcon
+              width={20}
+              height={20}
+              className={useClasses.actionIcon}
+              onClick={() => handleModal(id)}
+            />
+          </button>
+        </td>
+      );
+    }
+
+    if (typeof actions === "object") {
+      return (
+        <td>
+          {actions.view && (
+            <button className={useClasses.action}>
+              <EyeIcon
+                width={20}
+                height={20}
+                className={useClasses.actionIcon}
+                onClick={() => handleView(id)}
+              />
+            </button>
+          )}
+
+          {actions.edit && (
+            <button className={useClasses.action}>
+              <PencilSquareIcon
+                width={20}
+                height={20}
+                className={useClasses.actionIcon}
+                onClick={() => handleEdit(id)}
+              />
+            </button>
+          )}
+
+          {actions.delete && (
+            <button className={useClasses.action}>
+              <TrashIcon
+                width={20}
+                height={20}
+                className={useClasses.actionIcon}
+                onClick={() => handleModal(id)}
+              />
+            </button>
+          )}
+        </td>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -67,27 +156,7 @@ function Table({ table, actions, handleEdit, handleDelete }: PropTypes) {
                     </td>
                   ))}
 
-                  {actions ? (
-                    <td>
-                      <button className={useClasses.action}>
-                        <PencilSquareIcon
-                          width={20}
-                          height={20}
-                          className={useClasses.actionIcon}
-                          onClick={() => handleEdit(id)}
-                        />
-                      </button>
-
-                      <button className={useClasses.action}>
-                        <TrashIcon
-                          width={20}
-                          height={20}
-                          className={useClasses.actionIcon}
-                          onClick={() => handleModal(id)}
-                        />
-                      </button>
-                    </td>
-                  ) : null}
+                  {actions ? renderActions(id) : null}
                 </tr>
               );
             })}

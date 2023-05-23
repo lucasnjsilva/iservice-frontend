@@ -36,7 +36,11 @@ function Categories() {
     <Layout title="Categorias" admin={true}>
       <Table
         table={table}
-        actions={true}
+        actions={{
+          view: false,
+          edit: true,
+          delete: true,
+        }}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />

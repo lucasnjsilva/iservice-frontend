@@ -6,7 +6,7 @@ const classes = {
     "leading-6",
     "text-gray-800",
     "w-full",
-    "mb-8",
+    "mb-4",
   ],
 };
 
