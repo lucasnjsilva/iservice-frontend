@@ -8,6 +8,7 @@ import {
   UsersIcon,
   UserGroupIcon,
   PresentationChartLineIcon,
+  HomeIcon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
 
@@ -114,13 +115,30 @@ export const provider = [
 export const customer = [
   {
     label: "Dashboard",
-    href: "/dashboard",
+    href: "/panel/dashboard",
     icon: <ChartBarIcon width={20} height={20} />,
     items: null,
   },
   {
+    label: "Endereços",
+    href: null,
+    icon: <HomeIcon width={20} height={20} />,
+    items: [
+      {
+        label: "Listar",
+        href: "/panel/addresses",
+        icon: <ListBulletIcon width={20} height={20} />,
+      },
+      {
+        label: "Criar novo",
+        href: "/panel/addresses/new",
+        icon: <PlusIcon width={20} height={20} />,
+      },
+    ],
+  },
+  {
     label: "Minha Conta",
-    href: "/my_account",
+    href: "/panel/my_account",
     icon: <UserIcon width={20} height={20} />,
     items: null,
   },

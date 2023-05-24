@@ -21,15 +21,19 @@ export default function Layout({
 }: LayoutProps) {
   const useClasses = useStyle(classes);
 
-  return (
-    <>
-      {admin ? <AdminSidebar /> : <Sidebar />}
-      <main className={useClasses.main}>
-        <h1 className={useClasses.title}>{title}</h1>
-        <hr className={useClasses.divisor} />
+  const renderItems = () => {
+    return (
+      <>
+        {admin ? <AdminSidebar /> : <Sidebar />}
+        <main className={useClasses.main}>
+          <h1 className={useClasses.title}>{title}</h1>
+          <hr className={useClasses.divisor} />
 
-        {children}
-      </main>
-    </>
-  );
+          {children}
+        </main>
+      </>
+    );
+  };
+
+  return children ? renderItems() : null;
 }

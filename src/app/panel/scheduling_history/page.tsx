@@ -2,22 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import ProviderHistory from "./provider";
-
-type UserType = {
-  name: string;
-  role: string;
-};
+import UserData from "@/fake/user.json";
+import { UserRoles, UserType } from "@/interfaces/IUser";
 
 function SchedulingHistory() {
   const [user, setUser] = useState<UserType>();
-
-  useEffect(() => {
-    setUser({ name: "Lucas", role: "provider" });
-  }, []);
+  useEffect(() => setUser(UserData), []);
 
   if (user) {
-    if (user.role === "provider") {
+    if (user.role === UserRoles.provider) {
       return <ProviderHistory />;
+    } else {
+      console.log("Redirecionar");
     }
   }
 
