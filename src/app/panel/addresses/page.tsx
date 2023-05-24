@@ -4,7 +4,7 @@ import React from "react";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import { useRouter, usePathname } from "next/navigation";
-import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
+import { isCustomer } from "@/services/checkRole";
 
 function Addresses() {
   const navigate = useRouter();
@@ -35,8 +35,6 @@ function Addresses() {
     ],
   };
 
-  if (isAdmin() || isProvider()) navigate.back();
-
   if (isCustomer()) {
     const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
 
@@ -58,7 +56,7 @@ function Addresses() {
         />
       </Layout>
     );
-  }
+  } else navigate.back();
 }
 
 export default Addresses;

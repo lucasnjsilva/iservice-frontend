@@ -4,14 +4,12 @@ import React from "react";
 import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
-import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
+import { isCustomer } from "@/services/checkRole";
 import { useRouter } from "next/navigation";
 
 function EditAddress() {
   const navigate = useRouter();
   const useClasses = useStyle(classes);
-
-  if (isAdmin() || isProvider()) navigate.back();
 
   if (isCustomer()) {
     return (
@@ -91,7 +89,7 @@ function EditAddress() {
         </form>
       </Layout>
     );
-  }
+  } else navigate.back();
 }
 
 export default EditAddress;

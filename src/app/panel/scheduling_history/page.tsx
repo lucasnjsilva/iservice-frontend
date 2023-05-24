@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ProviderHistory from "./provider";
 import { useRouter } from "next/navigation";
-import { isAdmin, isProvider, isCustomer } from "@/services/checkRole";
+import { isProvider } from "@/services/checkRole";
 
 function SchedulingHistory() {
   const navigate = useRouter();
 
-  if (isAdmin() || isCustomer()) navigate.back();
-
-  if (isProvider()) return <ProviderHistory />;
+  if (isProvider()) {
+    return <ProviderHistory />;
+  } else navigate.back();
 }
 
 export default SchedulingHistory;

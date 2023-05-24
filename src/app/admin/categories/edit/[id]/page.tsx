@@ -7,9 +7,11 @@ import { useRouter, usePathname, useParams } from "next/navigation";
 import { isAdmin } from "@/services/checkRole";
 
 function Edit() {
+  const navigate = useRouter();
+  if (!isAdmin()) navigate.back();
+
   const useClasses = useStyle(classes);
   const params = useParams();
-  const navigate = useRouter();
   const pathname = usePathname();
 
   const handleSave = (evt: React.MouseEvent<HTMLButtonElement>) => {
@@ -19,31 +21,24 @@ function Edit() {
     navigate.back();
   };
 
-  if (isAdmin()) {
-    return (
-      <Layout title="Editar categoria" admin={true}>
-        <form className={useClasses.form}>
-          <div className={useClasses.formGroup}>
-            <div>
-              <label htmlFor="name" className={useClasses.label}>
-                Nome
-              </label>
-              <input name="name" type="text" className={useClasses.input} />
-            </div>
-
-            <button
-              className={useClasses.button}
-              onClick={(e) => handleSave(e)}
-            >
-              Salvar
-            </button>
+  return (
+    <Layout title="Editar categoria" admin={true}>
+      <form className={useClasses.form}>
+        <div className={useClasses.formGroup}>
+          <div>
+            <label htmlFor="name" className={useClasses.label}>
+              Nome
+            </label>
+            <input name="name" type="text" className={useClasses.input} />
           </div>
-        </form>
-      </Layout>
-    );
-  } else {
-    navigate.back();
-  }
+
+          <button className={useClasses.button} onClick={(e) => handleSave(e)}>
+            Salvar
+          </button>
+        </div>
+      </form>
+    </Layout>
+  );
 }
 
 export default Edit;

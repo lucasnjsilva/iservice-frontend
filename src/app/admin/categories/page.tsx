@@ -7,9 +7,12 @@ import { useRouter, usePathname } from "next/navigation";
 import { isAdmin } from "@/services/checkRole";
 
 function Categories() {
+  const navigate = useRouter();
+  if (!isAdmin()) navigate.back();
+
   const router = useRouter();
   const pathname = usePathname();
-  const navigate = useRouter();
+
   const table = {
     head: ["Nome"],
     body: [
@@ -28,30 +31,26 @@ function Categories() {
     ],
   };
 
-  if (isAdmin()) {
-    const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
+  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
 
-    const handleDelete = (id: string) => {
-      return console.log(id);
-    };
+  const handleDelete = (id: string) => {
+    return console.log(id);
+  };
 
-    return (
-      <Layout title="Categorias" admin={true}>
-        <Table
-          table={table}
-          actions={{
-            view: false,
-            edit: true,
-            delete: true,
-          }}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-      </Layout>
-    );
-  } else {
-    navigate.back();
-  }
+  return (
+    <Layout title="Categorias" admin={true}>
+      <Table
+        table={table}
+        actions={{
+          view: false,
+          edit: true,
+          delete: true,
+        }}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+    </Layout>
+  );
 }
 
 export default Categories;

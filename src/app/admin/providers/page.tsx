@@ -11,9 +11,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { isAdmin } from "@/services/checkRole";
 
 function Providers() {
+  const navigate = useRouter();
+  if (!isAdmin()) navigate.back();
+
   const useClasses = useStyle(classes);
   const pathname = usePathname();
-  const navigate = useRouter();
 
   const [table, setTable] = useState<any>();
   const [search, setSearch] = useState<string>("");
@@ -170,15 +172,11 @@ function Providers() {
     }
   };
 
-  if (isAdmin()) {
-    return (
-      <Layout title="Prestadores" admin={true}>
-        <main>{renderComponents()}</main>
-      </Layout>
-    );
-  } else {
-    navigate.back();
-  }
+  return (
+    <Layout title="Prestadores" admin={true}>
+      <main>{renderComponents()}</main>
+    </Layout>
+  );
 }
 
 export default Providers;

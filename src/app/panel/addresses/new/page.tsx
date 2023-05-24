@@ -3,13 +3,11 @@ import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 import { useRouter } from "next/navigation";
-import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
+import { isCustomer } from "@/services/checkRole";
 
 function NewAddress() {
   const navigate = useRouter();
   const useClasses = useStyle(classes);
-
-  if (isAdmin() || isProvider()) navigate.back();
 
   if (isCustomer()) {
     return (
@@ -89,7 +87,7 @@ function NewAddress() {
         </form>
       </Layout>
     );
-  }
+  } else navigate.back();
 }
 
 export default NewAddress;

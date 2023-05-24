@@ -5,14 +5,11 @@ import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 import { useRouter } from "next/navigation";
-import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
+import { isProvider } from "@/services/checkRole";
 
 function NewService() {
   const useClasses = useStyle(classes);
   const navigate = useRouter();
-
-  if (isAdmin() || isCustomer()) navigate.back();
-
   if (isProvider()) {
     const handleSave = () => {
       console.log("Chegou aqui");
@@ -45,7 +42,7 @@ function NewService() {
         </section>
       </Layout>
     );
-  }
+  } else navigate.back();
 }
 
 export default NewService;

@@ -10,9 +10,7 @@ function Dashboard() {
   const navigate = useRouter();
 
   if (isAdmin()) navigate.back();
-
   if (isProvider()) return <ProviderDashboard />;
-
   if (isCustomer()) return <CustomerDashboard />;
 }
 

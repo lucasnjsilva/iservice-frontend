@@ -4,15 +4,13 @@ import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 import { useRouter, usePathname, useParams } from "next/navigation";
-import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
+import { isProvider } from "@/services/checkRole";
 
 function Edit() {
   const useClasses = useStyle(classes);
   const navigate = useRouter();
   const params = useParams();
   const pathname = usePathname();
-
-  if (isAdmin() || isCustomer()) navigate.back();
 
   if (isProvider()) {
     const handleSave = (evt: React.MouseEvent<HTMLButtonElement>) => {
@@ -50,7 +48,7 @@ function Edit() {
         </form>
       </Layout>
     );
-  }
+  } else navigate.back();
 }
 
 export default Edit;

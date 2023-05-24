@@ -47,39 +47,37 @@ const table = {
 };
 
 function Dashboard() {
-  const useClasses = useStyle(classes);
   const navigate = useRouter();
+  if (!isAdmin()) navigate.back();
 
-  if (isAdmin()) {
-    return (
-      <Layout title="Dashboard" admin={true}>
-        <section>
-          <h2 className={useClasses.sectionTitle}>
-            Estatísticas Totais
-            <span className="text-sm font-normal text-slate-500">
-              {" "}
-              (clique em algum card para ver mais)
-            </span>
-          </h2>
+  const useClasses = useStyle(classes);
 
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
-            <StatsCard label="Clientes" stats="200" />
-            <StatsCard label="Prestadores" stats="500" />
-            <StatsCard label="Categorias" stats="23" />
-            <StatsCard label="Atendimentos" stats="133" />
-          </div>
-        </section>
+  return (
+    <Layout title="Dashboard" admin={true}>
+      <section>
+        <h2 className={useClasses.sectionTitle}>
+          Estatísticas Totais
+          <span className="text-sm font-normal text-slate-500">
+            {" "}
+            (clique em algum card para ver mais)
+          </span>
+        </h2>
 
-        <div className="mt-16">
-          <h2 className={useClasses.sectionTitle}>Últimos negociações</h2>
-
-          <Table table={table} actions={false} />
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
+          <StatsCard label="Clientes" stats="200" />
+          <StatsCard label="Prestadores" stats="500" />
+          <StatsCard label="Categorias" stats="23" />
+          <StatsCard label="Atendimentos" stats="133" />
         </div>
-      </Layout>
-    );
-  } else {
-    navigate.back();
-  }
+      </section>
+
+      <div className="mt-16">
+        <h2 className={useClasses.sectionTitle}>Últimos negociações</h2>
+
+        <Table table={table} actions={false} />
+      </div>
+    </Layout>
+  );
 }
 
 export default Dashboard;
