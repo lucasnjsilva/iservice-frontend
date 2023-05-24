@@ -4,9 +4,10 @@ import React from "react";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import { useRouter, usePathname } from "next/navigation";
+import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
 
 function Services() {
-  const router = useRouter();
+  const navigate = useRouter();
   const pathname = usePathname();
   const table = {
     head: ["Nome", "Categoria"],
@@ -29,26 +30,30 @@ function Services() {
     ],
   };
 
-  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
+  if (isAdmin() || isCustomer()) navigate.back();
 
-  const handleDelete = (id: string) => {
-    return console.log(id);
-  };
+  if (isProvider()) {
+    const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
 
-  return (
-    <Layout title="Serviços" admin={false}>
-      <Table
-        table={table}
-        actions={{
-          view: false,
-          edit: true,
-          delete: true,
-        }}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-    </Layout>
-  );
+    const handleDelete = (id: string) => {
+      return console.log(id);
+    };
+
+    return (
+      <Layout title="Serviços" admin={false}>
+        <Table
+          table={table}
+          actions={{
+            view: false,
+            edit: true,
+            delete: true,
+          }}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
+      </Layout>
+    );
+  }
 }
 
 export default Services;

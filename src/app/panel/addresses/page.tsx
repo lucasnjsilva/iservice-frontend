@@ -4,9 +4,10 @@ import React from "react";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import { useRouter, usePathname } from "next/navigation";
+import { isAdmin, isCustomer, isProvider } from "@/services/checkRole";
 
 function Addresses() {
-  const router = useRouter();
+  const navigate = useRouter();
   const pathname = usePathname();
   const table = {
     head: [
@@ -34,26 +35,30 @@ function Addresses() {
     ],
   };
 
-  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
+  if (isAdmin() || isProvider()) navigate.back();
 
-  const handleDelete = (id: string) => {
-    return console.log(id);
-  };
+  if (isCustomer()) {
+    const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
 
-  return (
-    <Layout title="Endereços" admin={false}>
-      <Table
-        table={table}
-        actions={{
-          view: false,
-          edit: true,
-          delete: true,
-        }}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-    </Layout>
-  );
+    const handleDelete = (id: string) => {
+      return console.log(id);
+    };
+
+    return (
+      <Layout title="Endereços" admin={false}>
+        <Table
+          table={table}
+          actions={{
+            view: false,
+            edit: true,
+            delete: true,
+          }}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
+      </Layout>
+    );
+  }
 }
 
 export default Addresses;

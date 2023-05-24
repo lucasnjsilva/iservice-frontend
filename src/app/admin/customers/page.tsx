@@ -8,11 +8,12 @@ import dateFormatter from "@/utils/dateFormatter";
 import Pagination from "@/components/Pagination";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
+import { isAdmin } from "@/services/checkRole";
 
 function Customers() {
   const useClasses = useStyle(classes);
   const pathname = usePathname();
-  const router = useRouter();
+  const navigate = useRouter();
 
   const [table, setTable] = useState<any>();
   const [search, setSearch] = useState<string>("");
@@ -49,101 +50,107 @@ function Customers() {
     });
   }, []);
 
-  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
+  if (isAdmin()) {
+    const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
 
-  const handleDelete = (id: string) => {
-    return console.log(id);
-  };
+    const handleDelete = (id: string) => {
+      return console.log(id);
+    };
 
-  const handleSearch = () => {
-    if (search !== "" && table) {
-      const isMatchFound = table.body.some((obj: any) => {
-        const values = Object.values(obj);
+    const handleSearch = () => {
+      if (search !== "" && table) {
+        const isMatchFound = table.body.some((obj: any) => {
+          const values = Object.values(obj);
 
-        return values.some((value) => {
-          if (typeof value === "string") {
-            const isString = value.toLowerCase().includes(search.toLowerCase());
-            return isString;
-          }
+          return values.some((value) => {
+            if (typeof value === "string") {
+              const isString = value
+                .toLowerCase()
+                .includes(search.toLowerCase());
+              return isString;
+            }
 
-          return false;
+            return false;
+          });
         });
-      });
 
-      console.log(isMatchFound);
-    }
-  };
+        console.log(isMatchFound);
+      }
+    };
 
-  const renderComponents = () => {
-    if (table && table !== undefined) {
-      return (
-        <>
-          <section className={useClasses.filters}>
-            <h4 className={useClasses.title}>Filtros</h4>
-            <div className={useClasses.wrapper}>
-              <input
-                type="text"
-                placeholder="Nome"
-                className={useClasses.inputSearch}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+    const renderComponents = () => {
+      if (table && table !== undefined) {
+        return (
+          <>
+            <section className={useClasses.filters}>
+              <h4 className={useClasses.title}>Filtros</h4>
+              <div className={useClasses.wrapper}>
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  className={useClasses.inputSearch}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
 
-              <input
-                type="text"
-                placeholder="E-mail"
-                className={useClasses.inputSearch}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+                <input
+                  type="text"
+                  placeholder="E-mail"
+                  className={useClasses.inputSearch}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
 
-              <input
-                type="text"
-                placeholder="CPF"
-                className={useClasses.inputSearch}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+                <input
+                  type="text"
+                  placeholder="CPF"
+                  className={useClasses.inputSearch}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
 
-              <input
-                type="text"
-                placeholder="Telefone"
-                className={useClasses.inputSearch}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+                <input
+                  type="text"
+                  placeholder="Telefone"
+                  className={useClasses.inputSearch}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
 
-              <button
-                className={useClasses.buttonSearch}
-                onClick={() => handleSearch()}
-              >
-                Pesquisar
-              </button>
-            </div>
-          </section>
+                <button
+                  className={useClasses.buttonSearch}
+                  onClick={() => handleSearch()}
+                >
+                  Pesquisar
+                </button>
+              </div>
+            </section>
 
-          <Table
-            table={table}
-            actions={{
-              view: false,
-              edit: true,
-              delete: true,
-            }}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
+            <Table
+              table={table}
+              actions={{
+                view: false,
+                edit: true,
+                delete: true,
+              }}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
 
-          <Pagination page={1} perPage={20} totalItems={50} />
-        </>
-      );
-    }
-  };
+            <Pagination page={1} perPage={20} totalItems={50} />
+          </>
+        );
+      }
+    };
 
-  return (
-    <Layout title="Clientes" admin={true}>
-      <main>{renderComponents()}</main>
-    </Layout>
-  );
+    return (
+      <Layout title="Clientes" admin={true}>
+        <main>{renderComponents()}</main>
+      </Layout>
+    );
+  } else {
+    navigate.back();
+  }
 }
 
 export default Customers;

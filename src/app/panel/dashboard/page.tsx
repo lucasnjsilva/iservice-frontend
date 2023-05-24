@@ -3,24 +3,17 @@
 import React, { useEffect, useState } from "react";
 import ProviderDashboard from "./provider";
 import CustomerDashboard from "./customer";
-import UserData from "@/fake/user.json";
-import { UserRoles, UserType } from "@/interfaces/IUser";
+import { isAdmin, isProvider, isCustomer } from "@/services/checkRole";
+import { useRouter } from "next/navigation";
 
 function Dashboard() {
-  const [user, setUser] = useState<UserType>();
-  useEffect(() => setUser(UserData), []);
+  const navigate = useRouter();
 
-  if (user) {
-    if (user.role === UserRoles.provider) {
-      return <ProviderDashboard />;
-    }
+  if (isAdmin()) navigate.back();
 
-    if (user.role === UserRoles.customer) {
-      return <CustomerDashboard />;
-    }
-  }
+  if (isProvider()) return <ProviderDashboard />;
 
-  return null;
+  if (isCustomer()) return <CustomerDashboard />;
 }
 
 export default Dashboard;

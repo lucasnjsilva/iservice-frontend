@@ -9,16 +9,11 @@ import AdminSidebar from "@/components/Sidebar/admin";
 interface LayoutProps {
   children: ReactNode;
   title: string;
-  path?: string;
   admin?: boolean;
 }
 
-export default function Layout({
-  children,
-  title,
-  path,
-  admin = false,
-}: LayoutProps) {
+export default function Layout(props: LayoutProps) {
+  const { children, title, admin = false } = props;
   const useClasses = useStyle(classes);
 
   const renderItems = () => {

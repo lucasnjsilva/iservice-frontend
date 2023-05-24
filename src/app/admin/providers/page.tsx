@@ -8,11 +8,12 @@ import Pagination from "@/components/Pagination";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import { usePathname, useRouter } from "next/navigation";
+import { isAdmin } from "@/services/checkRole";
 
 function Providers() {
   const useClasses = useStyle(classes);
   const pathname = usePathname();
-  const router = useRouter();
+  const navigate = useRouter();
 
   const [table, setTable] = useState<any>();
   const [search, setSearch] = useState<string>("");
@@ -63,7 +64,7 @@ function Providers() {
     });
   }, []);
 
-  const handleEdit = (id: string) => router.push(`${pathname}/edit/${id}`);
+  const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
 
   const handleDelete = (id: string) => {
     return console.log(id);
@@ -169,11 +170,15 @@ function Providers() {
     }
   };
 
-  return (
-    <Layout title="Prestadores" admin={true}>
-      <main>{renderComponents()}</main>
-    </Layout>
-  );
+  if (isAdmin()) {
+    return (
+      <Layout title="Prestadores" admin={true}>
+        <main>{renderComponents()}</main>
+      </Layout>
+    );
+  } else {
+    navigate.back();
+  }
 }
 
 export default Providers;

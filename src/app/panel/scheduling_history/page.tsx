@@ -2,22 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import ProviderHistory from "./provider";
-import UserData from "@/fake/user.json";
-import { UserRoles, UserType } from "@/interfaces/IUser";
+import { useRouter } from "next/navigation";
+import { isAdmin, isProvider, isCustomer } from "@/services/checkRole";
 
 function SchedulingHistory() {
-  const [user, setUser] = useState<UserType>();
-  useEffect(() => setUser(UserData), []);
+  const navigate = useRouter();
 
-  if (user) {
-    if (user.role === UserRoles.provider) {
-      return <ProviderHistory />;
-    } else {
-      console.log("Redirecionar");
-    }
-  }
+  if (isAdmin() || isCustomer()) navigate.back();
 
-  return null;
+  if (isProvider()) return <ProviderHistory />;
 }
 
 export default SchedulingHistory;
