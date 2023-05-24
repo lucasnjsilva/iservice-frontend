@@ -3,11 +3,11 @@ import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 
-function EditAddress() {
+function NewAddress() {
   const useClasses = useStyle(classes);
 
   return (
-    <Layout title="Editar endereço" admin={false}>
+    <Layout title="Endereços" admin={false}>
       <form className={useClasses.form}>
         <div className={useClasses.formGroup}>
           <div>
@@ -77,4 +77,4 @@ function EditAddress() {
   );
 }
 
-export default EditAddress;
+export default NewAddress;
