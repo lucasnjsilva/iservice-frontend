@@ -4,6 +4,7 @@ const classes = {
     "m-12",
     "bg-slate-100",
     "rounded",
+    "border",
     "flex",
     "flex-col",
     "space-y-6",

@@ -8,6 +8,7 @@ import {
   UsersIcon,
   UserGroupIcon,
   PresentationChartLineIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 
 export const admin = [
@@ -69,7 +70,7 @@ export const admin = [
 export const provider = [
   {
     label: "Dashboard",
-    href: "/dashboard",
+    href: "/panel/dashboard",
     icon: <ChartBarIcon width={20} height={20} />,
     items: null,
   },
@@ -80,19 +81,25 @@ export const provider = [
     items: [
       {
         label: "Listar",
-        href: "/services",
+        href: "/panel/services",
         icon: <ListBulletIcon width={20} height={20} />,
       },
       {
         label: "Criar novo",
-        href: "/services/new",
+        href: "/panel/services/new",
         icon: <PlusIcon width={20} height={20} />,
       },
     ],
   },
   {
+    label: "Histórico de Agendamentos",
+    href: "/panel/scheduling_history",
+    icon: <BookOpenIcon width={20} height={20} />,
+    items: null,
+  },
+  {
     label: "Minha Conta",
-    href: "/my_account",
+    href: "/panel/my_account",
     icon: <UserIcon width={20} height={20} />,
     items: null,
   },
