@@ -36,7 +36,7 @@ function Services() {
   };
 
   return (
-    <Layout title="Serviços" admin={true}>
+    <Layout title="Serviços" admin={false}>
       <Table
         table={table}
         actions={{
