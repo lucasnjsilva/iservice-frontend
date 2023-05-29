@@ -1,15 +1,57 @@
 "use client";
+
+import React from "react";
+import Layout from "../layouts/unauthenticated/index";
+import classes from "./style";
+import useStyle from "@/utils/cssHandler";
 import ServiceCard from "@/components/ServiceCard";
 import ProfessionalCard from "@/components/ProfessionalCard";
 import SearchHomePage from "@/components/SearchHomePage";
-import useStyle from "@/utils/cssHandler";
-import classes from "./style";
-import Layout from "../layouts/unauthenticated/index";
+import useSWR from "swr";
+
+const serviceFetcher = (url: string) => fetch(url).then((res) => res.json());
+const professionalFetcher = (url: string) =>
+  fetch(url).then((res) => res.json());
 
 export default function Homepage() {
   const useClasses = useStyle(classes);
-  const professionalProfile =
-    "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80";
+  const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+
+  const serviceUrl = `${API_HOST}/attendances/services/top-contracted`;
+  const useServiceFetcher = useSWR(serviceUrl, serviceFetcher);
+
+  const professionalUrl = `${API_HOST}/attendances/professionals/top-contracted`;
+  const useProfessionalFetcher = useSWR(professionalUrl, professionalFetcher);
+
+  const renderServiceCard = () => {
+    if (useServiceFetcher.error) return null;
+    if (useServiceFetcher.isLoading) return null;
+    if (!useServiceFetcher.data || !useServiceFetcher.data.result) return null;
+
+    return useServiceFetcher.data.result.map(({ service }: any) => (
+      <ServiceCard
+        key={service.id}
+        title={service.name}
+        description={service.description}
+      />
+    ));
+  };
+
+  const renderProfessionalCard = () => {
+    if (useProfessionalFetcher.error) return null;
+    if (useProfessionalFetcher.isLoading) return null;
+    if (!useProfessionalFetcher.data || !useProfessionalFetcher.data.result)
+      return null;
+
+    return useProfessionalFetcher.data.result.map(({ service }: any) => (
+      <ProfessionalCard
+        key={service.id}
+        name={service.provider.name}
+        profission={service.name}
+        profile={service.provider.profile_image ?? "/assets/blank_profile.png"}
+      />
+    ));
+  };
 
   return (
     <Layout>
@@ -56,59 +98,13 @@ export default function Homepage() {
       <section className="bg-white py-24">
         <h1 className={useClasses.title2}>Serviços mais Procurados</h1>
 
-        <div className={useClasses.grid}>
-          <ServiceCard title="Mecânico" />
-          <ServiceCard title="Encanador" />
-          <ServiceCard title="Eletricista" />
-          <ServiceCard title="Pedreiro" />
-        </div>
+        <div className={useClasses.grid}>{renderServiceCard()}</div>
       </section>
 
       <section className="bg-white py-24">
         <h1 className={useClasses.title2}>Profissionais mais Contratados</h1>
 
-        <div className={useClasses.grid}>
-          <ProfessionalCard
-            name="João Carlos"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luiz José"
-            profission="Pedreiro"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luis Felipe"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Lucas Pedro"
-            profission="Mecânico"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="João Carlos"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luiz José"
-            profission="Pedreiro"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="João Carlos"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luiz José"
-            profission="Pedreiro"
-            profile={professionalProfile}
-          />
-        </div>
+        <div className={useClasses.grid}>{renderProfessionalCard()}</div>
       </section>
     </Layout>
   );

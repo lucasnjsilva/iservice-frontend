@@ -1,19 +1,102 @@
-import useStyle from "@/utils/cssHandler";
-import React from "react";
+import React, { useState } from "react";
 import classes from "./style";
-import Link from "next/link";
+import useStyle from "@/utils/cssHandler";
+import { SearchTypes } from "@/interfaces/ISearch";
+import { useRouter } from "next/navigation";
+import useSWR from "swr";
 
-function SearchBar() {
+type PropTypes = {
+  service: string | null;
+  category: string | null;
+  uf: string | null;
+  city: string | null;
+};
+
+const categoryFetcher = (url: string) => fetch(url).then((res) => res.json());
+const ufFetcher = (url: string) => fetch(url).then((res) => res.json());
+const citiesFetcher = (url: string) => fetch(url).then((res) => res.json());
+
+function SearchBar(props: PropTypes) {
+  const { service, category, uf, city } = props;
   const useClasses = useStyle(classes);
+  const navigate = useRouter();
+  const [search, setSearch] = useState<SearchTypes>({
+    service: service || "",
+    category: category || "",
+    uf: uf || "",
+    city: city || "",
+  });
+
+  const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+  const categoryURL = `${API_HOST}/categories`;
+  const useCategoryFetcher = useSWR(categoryURL, categoryFetcher);
+
+  const ufURL = "https://brasilapi.com.br/api/ibge/uf/v1";
+  const useUFFetcher = useSWR(ufURL, ufFetcher);
+
+  const searchUf = search?.uf || "";
+  const citiesURL = `https://brasilapi.com.br/api/ibge/municipios/v1/${searchUf}`;
+  const useCitiesFetcher = useSWR(citiesURL, citiesFetcher);
+
+  const renderCategoryComponent = () => {
+    if (useCategoryFetcher.error) return null;
+    if (useCategoryFetcher.isLoading) return null;
+    if (!useCategoryFetcher.data) return null;
+
+    return useCategoryFetcher.data.result.map((item: any) => (
+      <option key={item.id} value={item.name}>
+        {item.name}
+      </option>
+    ));
+  };
+
+  const renderUFComponent = () => {
+    if (useUFFetcher.error) return null;
+    if (useUFFetcher.isLoading) return null;
+    if (!useUFFetcher.data) return null;
+
+    return useUFFetcher.data.map((item: any) => (
+      <option key={item.id} value={item.sigla}>
+        {item.nome}
+      </option>
+    ));
+  };
+
+  const renderCityComponent = () => {
+    if (search?.uf && search.uf !== "") {
+      if (useCitiesFetcher.error) return null;
+      if (useCitiesFetcher.isLoading) return null;
+      if (!useCitiesFetcher.data) return null;
+
+      return useCitiesFetcher.data.map((item: any) => (
+        <option key={item.codigo_ibge} value={item.nome}>
+          {item.nome}
+        </option>
+      ));
+    }
+  };
+
+  const handleSearch = () => {
+    const { service = "", category = "", uf = "", city = "" } = search ?? {};
+    const url = `/search?name=${service}&category=${category}&uf=${uf}&city=${city}`;
+
+    navigate.push(url);
+  };
 
   return (
     <main className={useClasses.area}>
       <div className={useClasses.inputGroup}>
         <div>
-          <label htmlFor="name" className={useClasses.label}>
+          <label htmlFor="service" className={useClasses.label}>
             Serviço
           </label>
-          <input name="name" type="text" className={useClasses.input} />
+          <input
+            name="service"
+            type="text"
+            value={search?.service}
+            className={useClasses.input}
+            onChange={(e) => setSearch({ ...search, service: e.target.value })}
+          />
         </div>
 
         <div>
@@ -24,13 +107,11 @@ function SearchBar() {
           <input
             list="categories"
             placeholder="Categorias"
+            value={search?.category}
             className={useClasses.input}
+            onChange={(e) => setSearch({ ...search, category: e.target.value })}
           />
-          <datalist id="categories">
-            <option value="encanador">Encanador</option>
-            <option value="mecanico">Mecânico</option>
-            <option value="eletricista">Eletricista</option>
-          </datalist>
+          <datalist id="categories">{renderCategoryComponent()}</datalist>
         </div>
 
         <div>
@@ -38,16 +119,15 @@ function SearchBar() {
             Estado
           </label>
 
-          <input
-            list="ufs"
-            placeholder="Estados"
+          <select
+            id="ufs"
             className={useClasses.input}
-          />
-          <datalist id="ufs">
-            <option value="PE">Pernambuco</option>
-            <option value="SP">São Paulo</option>
-            <option value="PB">Paraíba</option>
-          </datalist>
+            value={search?.uf}
+            onChange={(e) => setSearch({ ...search, uf: e.target.value })}
+          >
+            <option value="">Selecione um...</option>
+            {renderUFComponent()}
+          </select>
         </div>
 
         <div>
@@ -59,19 +139,17 @@ function SearchBar() {
             list="cities"
             placeholder="Cidades"
             className={useClasses.input}
-            disabled
+            disabled={!search || !search.uf}
+            value={search?.uf && search?.city ? search.city : ""}
+            onChange={(e) => setSearch({ ...search, city: e.target.value })}
           />
-          <datalist id="cities">
-            <option value="Pesqueira">Pesqueira</option>
-            <option value="Caruaru">Caruaru</option>
-            <option value="Recife">Recife</option>
-          </datalist>
+          <datalist id="cities">{renderCityComponent()}</datalist>
         </div>
 
         <div>
-          <Link href="#" className={useClasses.button}>
-            <button>Pesquisar</button>
-          </Link>
+          <button className={useClasses.button} onClick={handleSearch}>
+            Pesquisar
+          </button>
         </div>
       </div>
     </main>

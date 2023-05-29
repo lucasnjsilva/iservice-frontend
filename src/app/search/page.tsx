@@ -1,69 +1,60 @@
 "use client";
-import ServiceCard from "@/components/ServiceCard";
-import ProfessionalCard from "@/components/ProfessionalCard";
-import SearchHomePage from "@/components/SearchHomePage";
-import useStyle from "@/utils/cssHandler";
+
+import React from "react";
 import classes from "./style";
+import useStyle from "@/utils/cssHandler";
 import Layout from "../layouts/unauthenticated/index";
 import SearchBar from "@/components/SearchBar";
+import ProfessionalCard from "@/components/ProfessionalCard";
+import { useSearchParams } from "next/navigation";
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Homepage() {
+  const queryParams = useSearchParams();
+  const service = queryParams.get("name");
+  const category = queryParams.get("category");
+  const uf = queryParams.get("uf");
+  const city = queryParams.get("city");
+
   const useClasses = useStyle(classes);
-  const professionalProfile =
-    "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80";
+
+  const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+  const url = `${API_HOST}/services?name=${service}&categoryId=${category}&uf=${uf}&city=${city}`;
+  const { data, error, isLoading } = useSWR(url, fetcher);
+
+  const renderComponent = () => {
+    if (error) return null;
+    if (isLoading) return null;
+    if (!data || !data.result) return null;
+
+    return data.result.map((item: any) => (
+      <ProfessionalCard
+        key={item.id}
+        name={item.name}
+        profission={item.provider.name}
+        profile={item.provider.profile_image ?? "/assets/blank_profile.png"}
+      />
+    ));
+  };
 
   return (
     <Layout>
       <div className={useClasses.container}>
         <div className={useClasses.wrapper}>
           <h2 className={useClasses.title}>Pelo que está procurando?</h2>
-          <SearchBar />
+          <SearchBar
+            service={service}
+            category={category}
+            uf={uf}
+            city={city}
+          />
         </div>
       </div>
 
       <section className="bg-white py-24">
-        <div className={useClasses.grid}>
-          <ProfessionalCard
-            name="João Carlos"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luiz José"
-            profission="Pedreiro"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luis Felipe"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Lucas Pedro"
-            profission="Mecânico"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="João Carlos"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luiz José"
-            profission="Pedreiro"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="João Carlos"
-            profission="Eletricista"
-            profile={professionalProfile}
-          />
-          <ProfessionalCard
-            name="Luiz José"
-            profission="Pedreiro"
-            profile={professionalProfile}
-          />
-        </div>
+        <div className={useClasses.grid}>{renderComponent()}</div>
       </section>
     </Layout>
   );
