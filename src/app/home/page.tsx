@@ -8,6 +8,7 @@ import ServiceCard from "@/components/ServiceCard";
 import ProfessionalCard from "@/components/ProfessionalCard";
 import SearchHomePage from "@/components/SearchHomePage";
 import useSWR from "swr";
+import Link from "next/link";
 
 const serviceFetcher = (url: string) => fetch(url).then((res) => res.json());
 const professionalFetcher = (url: string) =>
@@ -29,11 +30,9 @@ export default function Homepage() {
     if (!useServiceFetcher.data || !useServiceFetcher.data.result) return null;
 
     return useServiceFetcher.data.result.map(({ service }: any) => (
-      <ServiceCard
-        key={service.id}
-        title={service.name}
-        description={service.description}
-      />
+      <Link href={`/service/${service.id}`} key={service.id}>
+        <ServiceCard title={service.name} description={service.description} />
+      </Link>
     ));
   };
 
@@ -44,12 +43,15 @@ export default function Homepage() {
       return null;
 
     return useProfessionalFetcher.data.result.map(({ service }: any) => (
-      <ProfessionalCard
-        key={service.id}
-        name={service.provider.name}
-        profission={service.name}
-        profile={service.provider.profile_image ?? "/assets/blank_profile.png"}
-      />
+      <Link href={`/provider/${service.provider_id}`} key={service.provider_id}>
+        <ProfessionalCard
+          name={service.provider.name}
+          profission={service.name}
+          profile={
+            service.provider.profile_image ?? "/assets/blank_profile.png"
+          }
+        />
+      </Link>
     ));
   };
 
