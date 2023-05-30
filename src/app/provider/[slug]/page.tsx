@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Layout from "../../layouts/unauthenticated/index";
@@ -8,19 +8,34 @@ import SearchBar from "@/components/SearchBar";
 import Image from "next/image";
 import ScheduleModal from "@/components/ScheduleModal";
 import UnauthenticatedModal from "@/components/UnauthenticatedModal";
+import { useParams } from "next/navigation";
+
+async function getData(id: string) {
+  const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+  const res = await fetch(`${API_HOST}/providers/${id}`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
 
 export default function Provider() {
+  const { slug } = useParams();
   const useClasses = useStyle(classes);
+  const [data, setData] = useState<any>();
   const [isOpen, setIsOpen] = useState(false);
 
-  const professionalProfile =
-    "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80";
+  useEffect(() => {
+    getData(slug).then(({ result }) => setData(result));
+  }, [slug]);
 
   const handleModal = () => setIsOpen(!isOpen);
 
   return (
     <>
-      <ScheduleModal isOpen={isOpen} onClose={handleModal} />
+      <UnauthenticatedModal isOpen={isOpen} onClose={handleModal} />
 
       <Layout>
         <div className={useClasses.container}>
@@ -39,7 +54,10 @@ export default function Provider() {
                     <div className="relative">
                       <Image
                         alt="..."
-                        src={professionalProfile}
+                        src={
+                          (data && data.profile_image) ??
+                          "/assets/blank_profile.png"
+                        }
                         className={useClasses.image}
                         width={1000}
                         height={1000}
@@ -49,17 +67,20 @@ export default function Provider() {
                 </div>
 
                 <div className={useClasses.textContainer}>
-                  <h3 className={useClasses.name}>Luiz Carlos</h3>
-                  <div className={useClasses.location}>Caruaru, PE</div>
-                  <div className={useClasses.job}>Técnico Eletricista</div>
+                  <h3 className={useClasses.name}>{data?.name ?? ""}</h3>
+                  <div className={useClasses.location}>
+                    {data?.city ?? ""}, {data?.uf ?? ""}
+                  </div>
                   <div className={useClasses.services}>
-                    <a href="">
-                      <span className={useClasses.service}>Mecânico</span>
-                    </a>
-
-                    <a href="">
-                      <span className={useClasses.service}>Eletricista</span>
-                    </a>
+                    {data && data.services
+                      ? data.services.map((item: any) => (
+                          <a href="#" key={item.id}>
+                            <span className={useClasses.service}>
+                              {item.name}
+                            </span>
+                          </a>
+                        ))
+                      : null}
                   </div>
                 </div>
 
@@ -67,11 +88,7 @@ export default function Provider() {
                   <div className={useClasses.descriptionWrapper}>
                     <div className={useClasses.descriptionContainer}>
                       <p className={useClasses.description}>
-                        Sou um técnico eletricista com mais de 20 anos de
-                        experiência na área. Tenho formação técnica em
-                        eletricidade e sou especialista em instalações
-                        elétricas, reparos e manutenções em sistemas elétricos
-                        de baixa e média tensão.
+                        {data?.about_me ?? ""}
                       </p>
                       <button
                         className={useClasses.scheduleButton}
