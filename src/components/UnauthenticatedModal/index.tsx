@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
+import { useRouter } from "next/navigation";
 
 type UnauthenticatedModalProps = {
   isOpen: boolean;
@@ -13,6 +14,10 @@ const UnauthenticatedModal: React.FC<UnauthenticatedModalProps> = ({
   onClose,
 }) => {
   const useClasses = useStyle(classes);
+  const navigation = useRouter();
+
+  const onSignin = () => navigation.push("/signin");
+  const onSignup = () => navigation.push("/signup");
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -58,14 +63,14 @@ const UnauthenticatedModal: React.FC<UnauthenticatedModalProps> = ({
                 <button
                   type="button"
                   className={useClasses.buttonSignIn}
-                  onClick={onClose}
+                  onClick={onSignin}
                 >
                   Entrar
                 </button>
                 <button
                   type="button"
                   className={useClasses.buttonSignUp}
-                  onClick={onClose}
+                  onClick={onSignup}
                 >
                   Criar conta
                 </button>
