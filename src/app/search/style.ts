@@ -20,6 +20,8 @@ const classes = {
     "xl:grid-cols-4",
     "pt-6",
     "gap-8",
+    "mb-8",
+    "pl-8",
   ],
 };
 
