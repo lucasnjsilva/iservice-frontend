@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
 type PropTypes = {
-  service: string | null;
-  category: string | null;
-  uf: string | null;
-  city: string | null;
+  service?: string | null;
+  category?: string | null;
+  uf?: string | null;
+  city?: string | null;
 };
 
 const categoryFetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -19,7 +19,7 @@ const ufFetcher = (url: string) => fetch(url).then((res) => res.json());
 const citiesFetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function SearchBar(props: PropTypes) {
-  const { service, category, uf, city } = props;
+  const { service = "", category = "", uf = "", city = "" } = props;
   const useClasses = useStyle(classes);
   const navigate = useRouter();
   const [search, setSearch] = useState<SearchTypes>({
@@ -38,7 +38,7 @@ function SearchBar(props: PropTypes) {
 
   const searchUf = search?.uf || "";
   const citiesURL = `https://brasilapi.com.br/api/ibge/municipios/v1/${searchUf}`;
-  const useCitiesFetcher = useSWR(citiesURL, citiesFetcher);
+  const useCitiesFetcher = useSWR(citiesURL, search.uf ? citiesFetcher : null);
 
   const renderCategoryComponent = () => {
     if (useCategoryFetcher.error) return null;
