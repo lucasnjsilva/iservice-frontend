@@ -5,11 +5,12 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 type PaginationProps = {
   page: number;
+  setPage: (pageNumber: number) => void;
   perPage: number;
   totalItems: number;
 };
 
-function Pagination({ page, perPage, totalItems }: PaginationProps) {
+function Pagination({ page, setPage, perPage, totalItems }: PaginationProps) {
   const useClasses = useStyle(classes);
 
   const renderPageButtons = () => {
@@ -52,30 +53,41 @@ function Pagination({ page, perPage, totalItems }: PaginationProps) {
 
     return (
       <li key={pageNumber}>
-        <a href="#" className={className}>
+        <button className={className} onClick={() => setPage(pageNumber)}>
           {pageNumber}
-        </a>
+        </button>
       </li>
     );
   };
+
+  const disablePrevPage = totalItems <= perPage;
+  const disableNextPage = totalItems <= perPage;
 
   return (
     <div className={useClasses.container}>
       <ol className={useClasses.ol}>
         <li>
-          <a href="#" className={useClasses.prevNext}>
+          <button
+            className={useClasses.prevNext}
+            onClick={() => setPage(page - 1)}
+            disabled={disablePrevPage}
+          >
             <span className="sr-only">Prev Page</span>
             <ChevronLeftIcon width={10} height={10} />
-          </a>
+          </button>
         </li>
 
         {renderPageButtons()}
 
         <li>
-          <a href="#" className={useClasses.prevNext}>
+          <button
+            className={useClasses.prevNext}
+            onClick={() => setPage(page + 1)}
+            disabled={disableNextPage}
+          >
             <span className="sr-only">Next Page</span>
             <ChevronRightIcon width={10} height={10} />
-          </a>
+          </button>
         </li>
       </ol>
     </div>
