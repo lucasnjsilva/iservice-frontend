@@ -14,7 +14,12 @@ const citiesFetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function SearchHomePage() {
   const navigate = useRouter();
   const useClasses = useStyle(classes);
-  const [search, setSearch] = useState<SearchTypes>();
+  const [search, setSearch] = useState<SearchTypes>({
+    service: "",
+    category: "",
+    uf: "",
+    city: "",
+  });
 
   const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
   const categoryURL = `${API_HOST}/categories`;
@@ -25,7 +30,7 @@ export default function SearchHomePage() {
 
   const searchUf = search?.uf || "";
   const citiesURL = `https://brasilapi.com.br/api/ibge/municipios/v1/${searchUf}`;
-  const useCitiesFetcher = useSWR(citiesURL, citiesFetcher);
+  const useCitiesFetcher = useSWR(citiesURL, search.uf ? citiesFetcher : null);
 
   const renderCategoryComponent = () => {
     if (useCategoryFetcher.error) return null;
