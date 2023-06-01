@@ -1,10 +1,22 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "../../layouts/unauthenticated/index";
+import { useRouter } from "next/navigation";
+import isAuthenticated from "@/services/isAuthenticated";
 
 function Login() {
   const useClasses = useStyle(classes);
+
+  const navigate = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate.back();
+    }
+  }, [navigate]);
 
   return (
     <Layout>
