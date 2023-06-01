@@ -70,7 +70,6 @@ const tableLastSchedules = {
 
 function CustomerDashboard() {
   const useClasses = useStyle(classes);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [itemId, setItemId] = useState<string>("");
 
@@ -108,7 +107,7 @@ function CustomerDashboard() {
             handleEdit={handleModal}
           />
 
-          <Pagination page={1} perPage={10} totalItems={5} />
+          {/* <Pagination page={1} perPage={10} totalItems={5} setPage={} /> */}
         </div>
       </Layout>
     </>
