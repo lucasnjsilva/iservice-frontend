@@ -62,7 +62,7 @@ export const admin = [
   },
   {
     label: "Sair",
-    href: "/logout",
+    href: "/signout",
     icon: <ArrowLeftOnRectangleIcon width={20} height={20} />,
     items: null,
   },
@@ -106,7 +106,7 @@ export const provider = [
   },
   {
     label: "Sair",
-    href: "/logout",
+    href: "/signout",
     icon: <ArrowLeftOnRectangleIcon width={20} height={20} />,
     items: null,
   },
@@ -144,7 +144,7 @@ export const customer = [
   },
   {
     label: "Sair",
-    href: "/logout",
+    href: "/signout",
     icon: <ArrowLeftOnRectangleIcon width={20} height={20} />,
     items: null,
   },
