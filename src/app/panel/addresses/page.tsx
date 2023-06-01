@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import { useRouter, usePathname } from "next/navigation";
 import { isCustomer } from "@/services/checkRole";
+import isAuthenticated from "@/services/isAuthenticated";
 
 function Addresses() {
   const navigate = useRouter();
@@ -34,29 +35,40 @@ function Addresses() {
       },
     ],
   };
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (isCustomer()) {
-    const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
+  useEffect(() => {
+    if (!isAuthenticated() || !isCustomer()) {
+      navigate.back();
+    } else {
+      return setIsLoading(false);
+    }
+  }, [navigate]);
 
-    const handleDelete = (id: string) => {
-      return console.log(id);
-    };
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
 
-    return (
-      <Layout title="Endereços" admin={false}>
-        <Table
-          table={table}
-          actions={{
-            view: false,
-            edit: true,
-            delete: true,
-          }}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-      </Layout>
-    );
-  } else navigate.back();
+  const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
+
+  const handleDelete = (id: string) => {
+    return console.log(id);
+  };
+
+  return (
+    <Layout title="Endereços" admin={false}>
+      <Table
+        table={table}
+        actions={{
+          view: false,
+          edit: true,
+          delete: true,
+        }}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+    </Layout>
+  );
 }
 
 export default Addresses;
