@@ -1,8 +1,11 @@
-import UserData from "@/fake/user.json";
-import { UserRoles } from "@/interfaces/IUser";
+import { UserType, UserRoles } from "@/interfaces/IUser";
+import useLocalStorage from "@/utils/useLocalStorage";
 
 export function isAdmin() {
-  if (UserData.role === UserRoles.admin) {
+  const UserData: UserType | null = useLocalStorage.get("user");
+
+  if (UserData && UserData.role === UserRoles.admin) {
+    console.log(UserData.role);
     return true;
   }
 
@@ -10,7 +13,9 @@ export function isAdmin() {
 }
 
 export function isProvider() {
-  if (UserData.role === UserRoles.provider) {
+  const UserData: UserType | null = useLocalStorage.get("user");
+
+  if (UserData && UserData.role === UserRoles.provider) {
     return true;
   }
 
@@ -18,7 +23,9 @@ export function isProvider() {
 }
 
 export function isCustomer() {
-  if (UserData.role === UserRoles.customer) {
+  const UserData: UserType | null = useLocalStorage.get("user");
+
+  if (UserData && UserData.role === UserRoles.customer) {
     return true;
   }
 
