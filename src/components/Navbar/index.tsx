@@ -16,6 +16,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState(false);
   const [isLogged, setIsLogged] = useState<boolean>();
+  const [role, setRole] = useState<string>();
 
   const handleMenu = () => setOpen(!open);
 
@@ -32,6 +33,11 @@ export default function Navbar() {
 
   useEffect(() => detectScrolling(), []);
   useEffect(() => {
+    const UserData: UserType | null = useLocalStorage.get("user");
+    if (UserData && UserData.role) {
+      setRole(UserData.role);
+    }
+
     return isAuthenticated() ? setIsLogged(true) : setIsLogged(false);
   }, []);
 
@@ -69,7 +75,13 @@ export default function Navbar() {
 
   const renderDesktopButtons = () => (
     <>
-      <Link href="/panel/dashboard">
+      <Link
+        href={
+          role === "provider" || role === "customer"
+            ? "/panel/dashboard"
+            : "/admin/dashboard"
+        }
+      >
         <button>Painel de Controle</button>
       </Link>
 
@@ -91,7 +103,13 @@ export default function Navbar() {
 
   const renderMobileButtons = () => (
     <>
-      <Link href="/panel/dashboard">
+      <Link
+        href={
+          role === "provider" || role === "customer"
+            ? "/panel/dashboard"
+            : "/admin/dashboard"
+        }
+      >
         <button>Painel de Controle</button>
       </Link>
 
