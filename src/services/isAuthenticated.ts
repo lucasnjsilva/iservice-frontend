@@ -7,6 +7,14 @@ export const UserData = () => {
   return data;
 };
 
+export const getToken = () => {
+  const data: UserType | null = useLocalStorage.get("user");
+
+  if (data && data.token) {
+    return data.token;
+  }
+};
+
 const isAuthenticated = () => {
   const UserData: UserType | null = useLocalStorage.get("user");
 

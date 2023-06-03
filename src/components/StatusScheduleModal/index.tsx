@@ -1,8 +1,16 @@
-import { Fragment } from "react";
+"use client";
+
+import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import dateFormatter from "@/utils/dateFormatter";
+import useSWR from "swr";
+import { getToken } from "@/services/isAuthenticated";
+import phoneFormatter from "@/utils/phoneFormatter";
+import { AttendanceStatus } from "@/utils/dictionaries";
+
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
 type StatusScheduleModalProps = {
   isOpen: boolean;
@@ -10,6 +18,16 @@ type StatusScheduleModalProps = {
   onRefuse: any;
   onClose: () => void;
   id: string;
+};
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  return response.json();
 };
 
 const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
@@ -20,6 +38,138 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
   id,
 }) => {
   const useClasses = useStyle(classes);
+  const [disabled, setDisabled] = useState(false);
+  const [data, setData] = useState<{
+    customer: string;
+    phone: string;
+    service: string;
+    solicitationDate: string;
+    scheduleDate: string;
+    status: string;
+    address: string;
+    number: string;
+    complement: string;
+    neighborhood: string;
+    reference: string;
+    city: string;
+    uf: string;
+    cep: string;
+  }>();
+
+  const url = `${API_HOST}/attendances/${id}`;
+  const useFetcher = useSWR(url, id ? fetcher : null);
+
+  useEffect(() => {
+    if (
+      useFetcher.error ||
+      useFetcher.isLoading ||
+      !useFetcher.data ||
+      !useFetcher.data.result
+    ) {
+      return;
+    }
+
+    const result = useFetcher.data.result;
+
+    setData({
+      customer: result.customer.name,
+      phone: result.customer.phone,
+      service: result.service.name,
+      solicitationDate: result.solicitation_date,
+      scheduleDate: result.attendance_date,
+      status: result.status,
+      address: result.customer.address.address,
+      number: result.customer.address.number,
+      complement: result.customer.address.complement,
+      neighborhood: result.customer.address.neighborhood,
+      reference: result.customer.address.reference,
+      city: result.customer.address.city,
+      uf: result.customer.address.uf,
+      cep: result.customer.address.cep,
+    });
+  }, [useFetcher.data, useFetcher.error, useFetcher.isLoading]);
+
+  const renderInfo = () => {
+    if (data) {
+      return (
+        <>
+          <h4 className={useClasses.h4}>Informações gerais</h4>
+          <ul>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Cliente:</p>
+              <p className={useClasses.listItem}>{data.customer}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Telefone:</p>
+              <p className={useClasses.listItem}>
+                {phoneFormatter(data!.phone)}
+              </p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Serviço:</p>
+              <p className={useClasses.listItem}>{data.service}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Data de Solicitação:</p>
+              <p className={useClasses.listItem}>
+                {dateFormatter(data.solicitationDate)}
+              </p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Data de Agendamento:</p>
+              <p className={useClasses.listItem}>
+                {dateFormatter(data.scheduleDate)}
+              </p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Status:</p>
+              <p className={useClasses.listItem}>
+                {AttendanceStatus(data.status)}
+              </p>
+            </li>
+          </ul>
+
+          <h4 className={useClasses.h4}>Endereço</h4>
+          <ul>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Endereço:</p>
+              <p className={useClasses.listItem}>{data.address}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Número:</p>
+              <p className={useClasses.listItem}>{data.number}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Complemento:</p>
+              <p className={useClasses.listItem}>{data.complement}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Bairro:</p>
+              <p className={useClasses.listItem}>{data.neighborhood}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Referência:</p>
+              <p className={useClasses.listItem}>{data.reference}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Cidade:</p>
+              <p className={useClasses.listItem}>{data.city}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>Estado:</p>
+              <p className={useClasses.listItem}>{data.uf}</p>
+            </li>
+            <li className={useClasses.textGroup}>
+              <p className={useClasses.listLabel}>CEP:</p>
+              <p className={useClasses.listItem}>{data.cep}</p>
+            </li>
+          </ul>
+        </>
+      );
+    } else {
+      return <p>Carregando informações...</p>;
+    }
+  };
 
   const handleConfirm = (id: string) => {
     onConfirm(id);
@@ -62,89 +212,31 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
               </Dialog.Title>
               <hr className="mt-4" />
 
-              <div className="mt-4 mb-8">
-                <h4 className={useClasses.h4}>Informações gerais</h4>
-                <ul>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Cliente:</p>
-                    <p className={useClasses.listItem}>Lucas</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Telefone:</p>
-                    <p className={useClasses.listItem}>(87) 99211-0368</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Serviço:</p>
-                    <p className={useClasses.listItem}>Eletricista</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Data de Solicitação:</p>
-                    <p className={useClasses.listItem}>
-                      {dateFormatter("2023-05-23")}
-                    </p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Data de Agendamento:</p>
-                    <p className={useClasses.listItem}>
-                      {dateFormatter("2023-05-23")}
-                    </p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Status:</p>
-                    <p className={useClasses.listItem}>PENDENTE</p>
-                  </li>
-                </ul>
-
-                <h4 className={useClasses.h4}>Endereço</h4>
-                <ul>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Endereço:</p>
-                    <p className={useClasses.listItem}>Rua teste</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Número:</p>
-                    <p className={useClasses.listItem}>102</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Complemento:</p>
-                    <p className={useClasses.listItem}>teste</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Bairro:</p>
-                    <p className={useClasses.listItem}>teste</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Referência:</p>
-                    <p className={useClasses.listItem}>teste</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Cidade:</p>
-                    <p className={useClasses.listItem}>teste</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>Estado:</p>
-                    <p className={useClasses.listItem}>teste</p>
-                  </li>
-                  <li className={useClasses.textGroup}>
-                    <p className={useClasses.listLabel}>CEP:</p>
-                    <p className={useClasses.listItem}>teste</p>
-                  </li>
-                </ul>
-              </div>
+              <div className="mt-4 mb-8">{renderInfo()}</div>
 
               <div className={useClasses.buttonGroup}>
                 <button
                   type="button"
-                  className={useClasses.buttonConfirm}
+                  className={`${useClasses.buttonConfirm} ${
+                    data && data.status !== "PENDING"
+                      ? "bg-gray-300 hover:bg-gray-300"
+                      : ""
+                  }`}
                   onClick={() => handleConfirm(id)}
+                  disabled={data && data.status !== "PENDING"}
                 >
                   Confirmar
                 </button>
 
                 <button
                   type="button"
-                  className={useClasses.buttonRefuse}
+                  className={`${useClasses.buttonRefuse}  ${
+                    data && data.status !== "PENDING"
+                      ? "bg-gray-300 hover:bg-gray-300"
+                      : ""
+                  }`}
                   onClick={() => handleRefuse(id)}
+                  disabled={data && data.status !== "PENDING"}
                 >
                   Recusar
                 </button>

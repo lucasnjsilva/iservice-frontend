@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Layout from "@/app/layouts/authenticated";
@@ -9,6 +9,7 @@ import Table from "@/components/Table";
 import dateFormatter from "@/utils/dateFormatter";
 import { isAdmin } from "@/services/checkRole";
 import { useRouter } from "next/navigation";
+import isAuthenticated from "@/services/isAuthenticated";
 
 const table = {
   head: [
@@ -48,7 +49,9 @@ const table = {
 
 function Dashboard() {
   const navigate = useRouter();
-  if (!isAdmin()) navigate.back();
+  useEffect(() => {
+    if (!isAuthenticated() && !isAdmin()) navigate.back();
+  }, [navigate]);
 
   const useClasses = useStyle(classes);
 

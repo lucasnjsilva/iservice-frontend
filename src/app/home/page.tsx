@@ -10,13 +10,14 @@ import SearchHomePage from "@/components/SearchHomePage";
 import useSWR from "swr";
 import Link from "next/link";
 
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+
 const serviceFetcher = (url: string) => fetch(url).then((res) => res.json());
 const professionalFetcher = (url: string) =>
   fetch(url).then((res) => res.json());
 
 export default function Homepage() {
   const useClasses = useStyle(classes);
-  const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
   const serviceUrl = `${API_HOST}/attendances/services/top-contracted`;
   const useServiceFetcher = useSWR(serviceUrl, serviceFetcher);

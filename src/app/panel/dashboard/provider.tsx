@@ -1,122 +1,161 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import dateFormatter from "@/utils/dateFormatter";
 import StatusScheduleModal from "@/components/StatusScheduleModal";
+import useSWR from "swr";
+import { getToken } from "@/services/isAuthenticated";
+import { AttendanceStatus } from "@/utils/dictionaries";
+import phoneFormatter from "@/utils/phoneFormatter";
+import { requestHeader } from "@/services/api";
+import { useRouter } from "next/navigation";
 
-const tableLastSchedules = {
-  head: [
-    "Cliente",
-    "Telefone",
-    "Serviço",
-    "Data de Solicitação",
-    "Data de Agendamento",
-    "Status",
-  ],
-  body: [
-    {
-      id: "a1",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a2",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a3",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a4",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a5",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-  ],
-};
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
-const tableTopServices = {
-  head: ["Serviço", "Contratos"],
-  body: [
-    {
-      id: "0",
-      service: "Eletricista residencial",
-      quantity: 20,
+const fetcher = async (url: string) => {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
     },
-    {
-      id: "1",
-      service: "Eletricista automotivo",
-      quantity: 20,
-    },
-    {
-      id: "2",
-      service: "Eletricista empresarial",
-      quantity: 20,
-    },
-    {
-      id: "3",
-      service: "Manutenção de computadores",
-      quantity: 20,
-    },
-    {
-      id: "4",
-      service: "Técnico de informática",
-      quantity: 20,
-    },
-  ],
+  });
+  return response.json();
 };
 
 function ProviderDashboard() {
   const useClasses = useStyle(classes);
+  const navigate = useRouter();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [itemId, setItemId] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemId, setItemId] = useState("");
+
+  const [lastSchedules, setLastSchedules] = useState({
+    head: [
+      "Cliente",
+      "Telefone",
+      "Serviço",
+      "Data de Solicitação",
+      "Data de Agendamento",
+      "Status",
+    ],
+    body: [],
+  });
+  const [topServices, setTopServices] = useState({
+    head: ["Serviço", "Contratos"],
+    body: [],
+  });
+
+  const lastSchedulesUrl = `${API_HOST}/attendances?limit=5`;
+  const useLastSchedulesFetcher = useSWR(lastSchedulesUrl, fetcher);
+
+  const topServicesUrl = `${API_HOST}/attendances/contracts_by_service`;
+  const useTopServicesFetcher = useSWR(topServicesUrl, fetcher);
+
+  useEffect(() => {
+    if (
+      useLastSchedulesFetcher.error ||
+      useLastSchedulesFetcher.isLoading ||
+      !useLastSchedulesFetcher.data ||
+      !useLastSchedulesFetcher.data.result
+    ) {
+      return;
+    }
+
+    const body = useLastSchedulesFetcher.data.result.map((item: any) => ({
+      id: item.id,
+      customer: item.customer.name,
+      phone: phoneFormatter(item.customer.phone),
+      service: item.service.category.name,
+      solicitationDate: dateFormatter(item.solicitation_date),
+      scheduleDate: dateFormatter(item.attendance_date),
+      status: AttendanceStatus(item.status),
+    }));
+
+    setLastSchedules((prevState) => ({
+      ...prevState,
+      body,
+    }));
+  }, [
+    useLastSchedulesFetcher.data,
+    useLastSchedulesFetcher.error,
+    useLastSchedulesFetcher.isLoading,
+  ]);
+
+  useEffect(() => {
+    if (
+      useTopServicesFetcher.error ||
+      useTopServicesFetcher.isLoading ||
+      !useTopServicesFetcher.data ||
+      !useTopServicesFetcher.data.result
+    ) {
+      return;
+    }
+
+    const body = Object.entries(useTopServicesFetcher.data.result).map(
+      ([service, attendances], index) => ({
+        id: String(index),
+        service,
+        attendances,
+      })
+    );
+
+    setTopServices((prevState: any) => ({
+      ...prevState,
+      body,
+    }));
+  }, [
+    useTopServicesFetcher.data,
+    useTopServicesFetcher.error,
+    useTopServicesFetcher.isLoading,
+  ]);
 
   const handleModal = (id?: string) => {
     if (id) {
       setItemId(id);
     }
 
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => !prevState);
   };
 
-  const handleConfirm = (id: string) => {
-    console.log(id);
+  const handleConfirm = async (id: string) => {
+    const payload = { status: "ATTENDED" };
+    const request = await fetch(`${API_HOST}/attendances/${id}`, {
+      method: "PUT",
+      headers: requestHeader,
+      body: JSON.stringify(payload),
+    });
+
+    const response = await request.json();
+
+    if (response.error) {
+      alert(
+        "Ocorreu um erro ao tentar confirmar seu atendimento. Por favor, tente novamente."
+      );
+    } else {
+      navigate.push("/panel/dashboard");
+    }
   };
 
-  const handleRefuse = (id: string) => {
-    console.log(id);
+  const handleRefuse = async (id: string) => {
+    const payload = { status: "CANCELED_BY_PROVIDER" };
+    const request = await fetch(`${API_HOST}/attendances/${id}`, {
+      method: "PUT",
+      headers: requestHeader,
+      body: JSON.stringify(payload),
+    });
+
+    const response = await request.json();
+
+    if (response.status === "OK") navigate.push("/panel/dashboard");
+
+    if (response.error) {
+      alert(
+        "Ocorreu um erro ao tentar confirmar seu atendimento. Por favor, tente novamente."
+      );
+    }
   };
 
   return (
@@ -133,12 +172,8 @@ function ProviderDashboard() {
         <div className="mt-16">
           <h2 className={useClasses.sectionTitle}>Últimos Agendamentos</h2>
           <Table
-            table={tableLastSchedules}
-            actions={{
-              view: false,
-              edit: true,
-              delete: false,
-            }}
+            table={lastSchedules}
+            actions={{ view: false, edit: true, delete: false }}
             handleEdit={handleModal}
           />
         </div>
@@ -147,7 +182,7 @@ function ProviderDashboard() {
           <h2 className={useClasses.sectionTitle}>
             Seus serviços mais buscados
           </h2>
-          <Table table={tableTopServices} actions={false} />
+          <Table table={topServices} actions={false} />
         </div>
       </Layout>
     </>
