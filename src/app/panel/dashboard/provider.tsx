@@ -12,7 +12,6 @@ import { getToken } from "@/services/isAuthenticated";
 import { AttendanceStatus } from "@/utils/dictionaries";
 import phoneFormatter from "@/utils/phoneFormatter";
 import { requestHeader } from "@/services/api";
-import { useRouter } from "next/navigation";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -27,7 +26,6 @@ const fetcher = async (url: string) => {
 
 function ProviderDashboard() {
   const useClasses = useStyle(classes);
-  const navigate = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
   const [itemId, setItemId] = useState("");
@@ -130,12 +128,12 @@ function ProviderDashboard() {
 
     const response = await request.json();
 
+    if (response.status === "OK") window.location.reload();
+
     if (response.error) {
       alert(
         "Ocorreu um erro ao tentar confirmar seu atendimento. Por favor, tente novamente."
       );
-    } else {
-      navigate.push("/panel/dashboard");
     }
   };
 
@@ -149,7 +147,7 @@ function ProviderDashboard() {
 
     const response = await request.json();
 
-    if (response.status === "OK") navigate.push("/panel/dashboard");
+    if (response.status === "OK") window.location.reload();
 
     if (response.error) {
       alert(

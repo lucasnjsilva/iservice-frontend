@@ -15,6 +15,14 @@ export const getToken = () => {
   }
 };
 
+export const getUserId = () => {
+  const data: UserType | null = useLocalStorage.get("user");
+
+  if (data && data.id) {
+    return data.id;
+  }
+};
+
 const isAuthenticated = () => {
   const UserData: UserType | null = useLocalStorage.get("user");
 
