@@ -10,6 +10,10 @@ import EvaluationCard from "@/components/EvaluationCard";
 import { useParams } from "next/navigation";
 import UnauthenticatedModal from "@/components/UnauthenticatedModal";
 import Link from "next/link";
+import isAuthenticated from "@/services/isAuthenticated";
+import ScheduleModal from "@/components/ScheduleModal";
+import { requestHeader } from "@/services/api";
+import { isCustomer } from "@/services/checkRole";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -39,13 +43,42 @@ function Service() {
   const [data, setData] = useState<any>();
   const [attendances, setAttendances] = useState<any>();
   const [isOpen, setIsOpen] = useState(false);
+  const [disabled, setDisabled] = useState<boolean>();
 
   useEffect(() => {
     getData(slug).then(({ result }) => setData(result));
     getAttendances(slug).then(({ result }) => setAttendances(result));
+
+    if (isCustomer()) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
   }, [slug]);
 
   const handleCloseModal = () => setIsOpen(!isOpen);
+
+  const onConfirm = async (id: string, date: string) => {
+    const payload = { serviceId: id, attendanceDate: date };
+    const request = await fetch(`${API_HOST}/attendances`, {
+      method: "POST",
+      headers: requestHeader,
+      body: JSON.stringify(payload),
+    });
+
+    const { error: requestError, result } = await request.json();
+
+    if (requestError) {
+      alert(
+        "Ocorreu um erro ao tentar criar sua conta, por favor tente novamente."
+      );
+    }
+
+    if (result) {
+      alert("Cadastrado com sucesso.");
+      window.location.reload();
+    }
+  };
 
   const renderEvaluations = () => {
     if (attendances) {
@@ -62,9 +95,28 @@ function Service() {
     } else return <p>Sem avaliações até o momento.</p>;
   };
 
+  const renderModal = () => {
+    if (isAuthenticated()) {
+      return (
+        <ScheduleModal
+          isOpen={isOpen}
+          onClose={handleCloseModal}
+          onConfirm={onConfirm}
+          providerId={data?.provider_id || undefined}
+          serviceId={slug}
+        />
+      );
+    } else {
+      return (
+        <UnauthenticatedModal isOpen={isOpen} onClose={handleCloseModal} />
+      );
+    }
+  };
+
   return (
     <>
-      <UnauthenticatedModal isOpen={isOpen} onClose={handleCloseModal} />
+      {renderModal()}
+
       <Layout>
         <div className={useClasses.container}>
           <div className={useClasses.wrapper}>
@@ -128,6 +180,7 @@ function Service() {
                     <button
                       className={useClasses.button}
                       onClick={handleCloseModal}
+                      disabled={disabled}
                     >
                       Agendar serviço
                     </button>

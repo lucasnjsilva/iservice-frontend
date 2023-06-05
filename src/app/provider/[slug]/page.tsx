@@ -9,6 +9,7 @@ import Image from "next/image";
 import ScheduleModal from "@/components/ScheduleModal";
 import UnauthenticatedModal from "@/components/UnauthenticatedModal";
 import { useParams } from "next/navigation";
+import { isCustomer } from "@/services/checkRole";
 
 async function getData(id: string) {
   const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
@@ -26,9 +27,16 @@ export default function Provider() {
   const useClasses = useStyle(classes);
   const [data, setData] = useState<any>();
   const [isOpen, setIsOpen] = useState(false);
+  const [disabled, setDisabled] = useState<boolean>();
 
   useEffect(() => {
     getData(slug).then(({ result }) => setData(result));
+
+    if (isCustomer()) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
   }, [slug]);
 
   const handleModal = () => setIsOpen(!isOpen);
@@ -92,6 +100,7 @@ export default function Provider() {
                       </p>
                       <button
                         className={useClasses.scheduleButton}
+                        disabled={disabled}
                         onClick={handleModal}
                       >
                         Agendar serviço

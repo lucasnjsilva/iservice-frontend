@@ -24,14 +24,14 @@ function EvaluationCard({
   );
 
   return (
-    <a className={useClasses.card} href="#">
+    <div className={useClasses.card}>
       <div className={useClasses.wrapper}>
         <div className="flex">{filledStars}</div>
 
         <h3 className={useClasses.cardTitle}>{title}</h3>
         <p className={useClasses.cardSubtitle}>{comment}</p>
       </div>
-    </a>
+    </div>
   );
 }
 

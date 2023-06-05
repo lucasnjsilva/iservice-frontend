@@ -5,7 +5,7 @@ import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import { useRouter, usePathname } from "next/navigation";
 import { isProvider } from "@/services/checkRole";
-import isAuthenticated, { getUserId } from "@/services/isAuthenticated";
+import isAuthenticated from "@/services/isAuthenticated";
 import { requestHeader } from "@/services/api";
 import useSWR from "swr";
 
@@ -29,7 +29,7 @@ function Services() {
     body: [],
   });
 
-  const url = `${API_HOST}/services?user=${getUserId()}`;
+  const url = `${API_HOST}/services?my_services=true`;
   const useFetcher = useSWR(url, fetcher);
 
   useEffect(() => {
