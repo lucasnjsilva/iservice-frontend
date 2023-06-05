@@ -10,6 +10,10 @@ import ScheduleModal from "@/components/ScheduleModal";
 import UnauthenticatedModal from "@/components/UnauthenticatedModal";
 import { useParams } from "next/navigation";
 import { isCustomer } from "@/services/checkRole";
+import isAuthenticated from "@/services/isAuthenticated";
+import { requestHeader } from "@/services/api";
+
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
 async function getData(id: string) {
   const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
@@ -41,9 +45,46 @@ export default function Provider() {
 
   const handleModal = () => setIsOpen(!isOpen);
 
+  const onConfirm = async (id: string, date: string) => {
+    const payload = { serviceId: id, attendanceDate: date };
+    const request = await fetch(`${API_HOST}/attendances`, {
+      method: "POST",
+      headers: requestHeader,
+      body: JSON.stringify(payload),
+    });
+
+    const { error: requestError, result } = await request.json();
+
+    if (requestError) {
+      alert(
+        "Ocorreu um erro ao tentar criar sua conta, por favor tente novamente."
+      );
+    }
+
+    if (result) {
+      alert("Cadastrado com sucesso.");
+      window.location.reload();
+    }
+  };
+
+  const renderModal = () => {
+    if (isAuthenticated()) {
+      return (
+        <ScheduleModal
+          isOpen={isOpen}
+          onClose={handleModal}
+          onConfirm={onConfirm}
+          providerId={slug || undefined}
+        />
+      );
+    } else {
+      return <UnauthenticatedModal isOpen={isOpen} onClose={handleModal} />;
+    }
+  };
+
   return (
     <>
-      <UnauthenticatedModal isOpen={isOpen} onClose={handleModal} />
+      {renderModal()}
 
       <Layout>
         <div className={useClasses.container}>

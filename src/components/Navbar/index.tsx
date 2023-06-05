@@ -56,7 +56,7 @@ export default function Navbar() {
 
       if (response && response.status === "OK") {
         useLocalStorage.remove("user");
-        navigate.refresh();
+        window.location.reload();
       }
     }
   };
@@ -77,7 +77,7 @@ export default function Navbar() {
     <>
       <Link
         href={
-          role === "provider" || role === "customer"
+          role === "PROVIDER" || role === "CUSTOMER"
             ? "/panel/dashboard"
             : "/admin/dashboard"
         }
@@ -105,7 +105,7 @@ export default function Navbar() {
     <>
       <Link
         href={
-          role === "provider" || role === "customer"
+          role === "PROVIDER" || role === "CUSTOMER"
             ? "/panel/dashboard"
             : "/admin/dashboard"
         }

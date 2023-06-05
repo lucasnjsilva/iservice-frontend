@@ -18,7 +18,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 }) => {
   const useClasses = useStyle(classes);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = () => {
     onDelete(id);
     onClose();
   };
@@ -61,7 +61,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 <button
                   type="button"
                   className={useClasses.buttonConfirm}
-                  onClick={() => handleDelete(id)}
+                  onClick={handleDelete}
                 >
                   Deletar
                 </button>
