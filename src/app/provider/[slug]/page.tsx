@@ -16,7 +16,6 @@ import { requestHeader } from "@/services/api";
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
 async function getData(id: string) {
-  const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
   const res = await fetch(`${API_HOST}/providers/${id}`);
 
   if (!res.ok) {

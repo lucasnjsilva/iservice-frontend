@@ -10,6 +10,7 @@ import {
   PresentationChartLineIcon,
   HomeIcon,
   BookOpenIcon,
+  ArrowUturnLeftIcon,
 } from "@heroicons/react/24/outline";
 
 export const admin = [
@@ -61,6 +62,12 @@ export const admin = [
     items: null,
   },
   {
+    label: "Voltar ao site",
+    href: "/",
+    icon: <ArrowUturnLeftIcon width={20} height={20} />,
+    items: null,
+  },
+  {
     label: "Sair",
     href: "/signout",
     icon: <ArrowLeftOnRectangleIcon width={20} height={20} />,
@@ -105,6 +112,12 @@ export const provider = [
     items: null,
   },
   {
+    label: "Voltar ao site",
+    href: "/",
+    icon: <ArrowUturnLeftIcon width={20} height={20} />,
+    items: null,
+  },
+  {
     label: "Sair",
     href: "/signout",
     icon: <ArrowLeftOnRectangleIcon width={20} height={20} />,
@@ -140,6 +153,12 @@ export const customer = [
     label: "Minha Conta",
     href: "/panel/my_account",
     icon: <UserIcon width={20} height={20} />,
+    items: null,
+  },
+  {
+    label: "Voltar ao site",
+    href: "/",
+    icon: <ArrowUturnLeftIcon width={20} height={20} />,
     items: null,
   },
   {
