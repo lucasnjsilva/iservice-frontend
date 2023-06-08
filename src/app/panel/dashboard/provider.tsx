@@ -66,7 +66,7 @@ function ProviderDashboard() {
       id: item.id,
       customer: item.customer.name,
       phone: phoneFormatter(item.customer.phone),
-      service: item.service.category.name,
+      service: item.service.name,
       solicitationDate: dateFormatter(item.solicitation_date),
       scheduleDate: dateFormatter(item.attendance_date),
       status: AttendanceStatus(item.status),

@@ -217,11 +217,7 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
               <div className={useClasses.buttonGroup}>
                 <button
                   type="button"
-                  className={`${useClasses.buttonConfirm} ${
-                    data && data.status !== "PENDING"
-                      ? "bg-gray-300 hover:bg-gray-300"
-                      : ""
-                  }`}
+                  className={useClasses.buttonConfirm}
                   onClick={() => handleConfirm(id)}
                   disabled={data && data.status !== "PENDING"}
                 >
@@ -230,11 +226,7 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
 
                 <button
                   type="button"
-                  className={`${useClasses.buttonRefuse}  ${
-                    data && data.status !== "PENDING"
-                      ? "bg-gray-300 hover:bg-gray-300"
-                      : ""
-                  }`}
+                  className={useClasses.buttonRefuse}
                   onClick={() => handleRefuse(id)}
                   disabled={data && data.status !== "PENDING"}
                 >
