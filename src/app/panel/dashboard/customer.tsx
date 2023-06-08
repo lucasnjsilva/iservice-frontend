@@ -1,77 +1,86 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Layout from "@/app/layouts/authenticated";
 import Table from "@/components/Table";
 import dateFormatter from "@/utils/dateFormatter";
-import StatusScheduleModal from "@/components/StatusScheduleModal";
 import CancelScheduleModal from "@/components/CancelScheduleModal";
+import { getToken } from "@/services/isAuthenticated";
+import useSWR from "swr";
+import phoneFormatter from "@/utils/phoneFormatter";
+import { AttendanceStatus } from "@/utils/dictionaries";
 import Pagination from "@/components/Pagination";
+import { requestHeader } from "@/services/api";
 
-const tableLastSchedules = {
-  head: [
-    "Cliente",
-    "Telefone",
-    "Serviço",
-    "Data de Solicitação",
-    "Data de Agendamento",
-    "Status",
-  ],
-  body: [
-    {
-      id: "a1",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
     },
-    {
-      id: "a2",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a3",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a4",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-    {
-      id: "a5",
-      customer: "Tatiane Silva",
-      phone: "(99) 99999-9999",
-      service: "Mecânico",
-      solicitationDate: dateFormatter("2023-05-12"),
-      scheduleDate: dateFormatter("2023-05-13"),
-      status: "PENDENTE",
-    },
-  ],
+  });
+
+  return response.json();
 };
 
 function CustomerDashboard() {
   const useClasses = useStyle(classes);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [itemId, setItemId] = useState<string>("");
+  const [lastSchedules, setLastSchedules] = useState({
+    head: [
+      "Cliente",
+      "Telefone",
+      "Serviço",
+      "Data de Solicitação",
+      "Data de Agendamento",
+      "Status",
+    ],
+    body: [],
+  });
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    perPage: 0,
+    totalItems: 0,
+  });
+
+  const url = `${API_HOST}/attendances`;
+  const useFetcher = useSWR(url, fetcher);
+
+  useEffect(() => {
+    if (
+      useFetcher.error ||
+      useFetcher.isLoading ||
+      !useFetcher.data ||
+      !useFetcher.data.result
+    ) {
+      return;
+    }
+
+    const body = useFetcher.data.result.map((item: any) => ({
+      id: item.id,
+      customer: item.customer.name,
+      phone: phoneFormatter(item.customer.phone),
+      service: item.service.name,
+      solicitationDate: dateFormatter(item.solicitation_date),
+      scheduleDate: dateFormatter(item.attendance_date),
+      status: AttendanceStatus(item.status),
+    }));
+
+    setLastSchedules((prevState) => ({
+      ...prevState,
+      body,
+    }));
+
+    setPage(useFetcher.data.pagination.page);
+    setPagination({
+      perPage: useFetcher.data.pagination.perPage,
+      totalItems: useFetcher.data.pagination.total,
+    });
+  }, [useFetcher.data, useFetcher.error, useFetcher.isLoading]);
 
   const handleModal = (id?: string) => {
     if (id) {
@@ -81,8 +90,23 @@ function CustomerDashboard() {
     setIsOpen(!isOpen);
   };
 
-  const handleCancel = (id: string) => {
-    console.log(id);
+  const handleCancel = async (id: string) => {
+    const payload = { status: "CANCELED_BY_CUSTOMER" };
+    const request = await fetch(`${API_HOST}/attendances/${id}`, {
+      method: "PUT",
+      headers: requestHeader,
+      body: JSON.stringify(payload),
+    });
+
+    const response = await request.json();
+
+    if (response.status === "OK") window.location.reload();
+
+    if (response.error) {
+      alert(
+        "Ocorreu um erro ao tentar confirmar seu atendimento. Por favor, tente novamente."
+      );
+    }
   };
 
   return (
@@ -98,16 +122,17 @@ function CustomerDashboard() {
         <div className="mt-16">
           <h2 className={useClasses.sectionTitle}>Últimos Agendamentos</h2>
           <Table
-            table={tableLastSchedules}
-            actions={{
-              view: false,
-              edit: true,
-              delete: false,
-            }}
+            table={lastSchedules}
+            actions={{ view: false, edit: true, delete: false }}
             handleEdit={handleModal}
           />
 
-          {/* <Pagination page={1} perPage={10} totalItems={5} setPage={} /> */}
+          <Pagination
+            page={page}
+            setPage={setPage}
+            perPage={pagination.perPage}
+            totalItems={pagination.totalItems}
+          />
         </div>
       </Layout>
     </>

@@ -41,6 +41,7 @@ const classes = {
     "sm:ml-3",
     "sm:w-auto",
     "sm:text-sm",
+    "disabled:bg-gray-300",
   ],
   buttonCancel: [
     "mt-3",

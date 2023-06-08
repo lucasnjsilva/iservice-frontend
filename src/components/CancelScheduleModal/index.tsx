@@ -1,8 +1,10 @@
-import { Fragment } from "react";
+"use client";
+
+import React, { useEffect, useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
-import dateFormatter from "@/utils/dateFormatter";
+import { requestHeader } from "@/services/api";
 
 type CancelScheduleModalProps = {
   isOpen: boolean;
@@ -11,6 +13,8 @@ type CancelScheduleModalProps = {
   onClose: () => void;
 };
 
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+
 const CancelScheduleModal: React.FC<CancelScheduleModalProps> = ({
   isOpen,
   id,
@@ -18,6 +22,23 @@ const CancelScheduleModal: React.FC<CancelScheduleModalProps> = ({
   onCancel,
 }) => {
   const useClasses = useStyle(classes);
+  const [data, setData] = useState<any>();
+
+  useEffect(() => {
+    async function getData() {
+      const request = await fetch(`${API_HOST}/attendances/${id}`, {
+        headers: requestHeader,
+      });
+
+      if (!request.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      return request.json();
+    }
+
+    getData().then(({ result }) => setData(result));
+  }, [id]);
 
   const handleCancel = (id: string) => {
     onCancel(id);
@@ -61,17 +82,16 @@ const CancelScheduleModal: React.FC<CancelScheduleModalProps> = ({
 
               <div className={useClasses.buttonGroup}>
                 <button
-                  type="button"
                   className={useClasses.buttonRefuse}
                   onClick={() => handleCancel(id)}
+                  disabled={data && data.status !== "PENDING"}
                 >
                   Cancelar
                 </button>
 
                 <button
-                  type="button"
                   className={useClasses.buttonCancel}
-                  onClick={onClose}
+                  onClick={() => onClose()}
                 >
                   Fechar
                 </button>
