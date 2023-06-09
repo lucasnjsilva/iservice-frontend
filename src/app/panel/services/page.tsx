@@ -70,7 +70,7 @@ function Services() {
       headers: requestHeader,
     });
 
-    const { error: requestError, result } = await request.json();
+    const { error: requestError } = await request.json();
 
     if (requestError) {
       return alert(

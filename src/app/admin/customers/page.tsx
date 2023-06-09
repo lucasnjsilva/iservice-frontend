@@ -58,24 +58,7 @@ function Customers() {
     return console.log(id);
   };
 
-  const handleSearch = () => {
-    if (search !== "" && table) {
-      const isMatchFound = table.body.some((obj: any) => {
-        const values = Object.values(obj);
-
-        return values.some((value) => {
-          if (typeof value === "string") {
-            const isString = value.toLowerCase().includes(search.toLowerCase());
-            return isString;
-          }
-
-          return false;
-        });
-      });
-
-      console.log(isMatchFound);
-    }
-  };
+  const handleSearch = () => {};
 
   const renderComponents = () => {
     if (table && table !== undefined) {
@@ -136,7 +119,7 @@ function Customers() {
             handleDelete={handleDelete}
           />
 
-          <Pagination page={1} perPage={20} totalItems={50} />
+          {/* <Pagination page={1} perPage={20} totalItems={50} /> */}
         </>
       );
     }

@@ -82,8 +82,21 @@ function Addresses() {
 
   const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);
 
-  const handleDelete = (id: string) => {
-    return console.log(id);
+  const handleDelete = async (id: string) => {
+    const request = await fetch(`${API_HOST}/customer_addresses/delete/${id}`, {
+      method: "PATCH",
+      headers: requestHeader,
+    });
+
+    const { error: requestError } = await request.json();
+
+    if (requestError) {
+      return alert(
+        "Ocorreu um erro ao tentar deletar este serviço, por favor, tente novamente."
+      );
+    }
+
+    return window.location.reload();
   };
 
   return (

@@ -54,24 +54,7 @@ function Attendances() {
     ],
   };
 
-  const handleSearch = () => {
-    if (search !== "" && table) {
-      const isMatchFound = table.body.some((obj: any) => {
-        const values = Object.values(obj);
-
-        return values.some((value) => {
-          if (typeof value === "string") {
-            const isString = value.toLowerCase().includes(search.toLowerCase());
-            return isString;
-          }
-
-          return false;
-        });
-      });
-
-      console.log(isMatchFound);
-    }
-  };
+  const handleSearch = () => {};
 
   return (
     <Layout title="Atendimentos" admin={true}>
@@ -128,7 +111,7 @@ function Attendances() {
       </section>
 
       <Table table={table} actions={false} />
-      <Pagination page={1} perPage={20} totalItems={5} />
+      {/* <Pagination page={1} perPage={20} totalItems={5} /> */}
     </Layout>
   );
 }

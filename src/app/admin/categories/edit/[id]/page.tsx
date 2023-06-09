@@ -16,8 +16,6 @@ function Edit() {
 
   const handleSave = (evt: React.MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-
-    console.log("Salvou: ", params);
     navigate.back();
   };
 
