@@ -130,10 +130,7 @@ function AccountProvider() {
                 type="text"
                 className={useClasses.input}
                 value={data?.email || ""}
-                onChange={(e) =>
-                  setData((prev: any) => ({ ...prev, email: e.target.value }))
-                }
-                disabled={true}
+                disabled
               />
             </div>
 
