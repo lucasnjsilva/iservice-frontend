@@ -6,11 +6,24 @@ import Table from "@/components/Table";
 import { useRouter, usePathname } from "next/navigation";
 import { isCustomer } from "@/services/checkRole";
 import isAuthenticated from "@/services/isAuthenticated";
+import { requestHeader } from "@/services/api";
+import useSWR from "swr";
+
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url, {
+    headers: requestHeader,
+  });
+
+  return response.json();
+};
 
 function Addresses() {
   const navigate = useRouter();
   const pathname = usePathname();
-  const table = {
+  const [isLoading, setIsLoading] = useState(true);
+  const [table, setTable] = useState({
     head: [
       "Endereço",
       "Número",
@@ -21,21 +34,11 @@ function Addresses() {
       "Estado",
       "CEP",
     ],
-    body: [
-      {
-        id: "a1",
-        address: "Av. Heraldo Gueiros",
-        number: "322",
-        complement: "Apto. 102",
-        neighborhood: "Prado",
-        reference: "CAF MUnicipal",
-        city: "Pesqueira",
-        uf: "PE",
-        cep: "55200-000",
-      },
-    ],
-  };
-  const [isLoading, setIsLoading] = useState(true);
+    body: [],
+  });
+
+  const url = `${API_HOST}/customer_addresses`;
+  const useFetcher = useSWR(url, fetcher);
 
   useEffect(() => {
     if (!isAuthenticated() || !isCustomer()) {
@@ -44,6 +47,34 @@ function Addresses() {
       return setIsLoading(false);
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (
+      useFetcher.error ||
+      useFetcher.isLoading ||
+      !useFetcher.data ||
+      !useFetcher.data.result
+    ) {
+      return;
+    }
+
+    const body = useFetcher.data.result.map((item: any) => ({
+      id: item.id,
+      address: item.address,
+      number: item.number,
+      complement: item.complement,
+      neighborhood: item.neighborhood,
+      reference: item.reference,
+      city: item.city,
+      uf: item.uf,
+      cep: item.cep,
+    }));
+
+    setTable((prevState) => ({
+      ...prevState,
+      body,
+    }));
+  }, [useFetcher.data, useFetcher.error, useFetcher.isLoading]);
 
   if (isLoading) {
     return <div>Carregando...</div>;

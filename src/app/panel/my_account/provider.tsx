@@ -6,6 +6,7 @@ import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 import { useRouter } from "next/navigation";
 import { requestHeader } from "@/services/api";
+import useSWR from "swr";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -19,17 +20,59 @@ async function getData() {
   return res.json();
 }
 
+const ufFetcher = (url: string) => fetch(url).then((res) => res.json());
+const citiesFetcher = (url: string) => fetch(url).then((res) => res.json());
+
 function AccountProvider() {
   const useClasses = useStyle(classes);
   const navigate = useRouter();
   const [data, setData] = useState<any>();
   const [error, setError] = useState<string>();
 
+  const [uf, setUf] = useState<string>();
+  const [city, setCity] = useState<string>();
+
+  const ufURL = "https://brasilapi.com.br/api/ibge/uf/v1";
+  const useUFFetcher = useSWR(ufURL, ufFetcher);
+
+  const citiesURL = `https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`;
+  const useCitiesFetcher = useSWR(citiesURL, uf ? citiesFetcher : null);
+
   useEffect(() => {
     getData()
-      .then(({ result }) => setData(result))
+      .then(({ result }) => {
+        setData(result);
+        setUf(result.uf);
+        setCity(result.city);
+      })
       .catch(() => navigate.back());
   }, [navigate]);
+
+  const renderUFComponent = () => {
+    if (useUFFetcher.error) return null;
+    if (useUFFetcher.isLoading) return null;
+    if (!useUFFetcher.data) return null;
+
+    return useUFFetcher.data.map((item: any) => (
+      <option key={item.id} value={item.sigla}>
+        {item.nome}
+      </option>
+    ));
+  };
+
+  const renderCityComponent = () => {
+    if (uf) {
+      if (useCitiesFetcher.error) return null;
+      if (useCitiesFetcher.isLoading) return null;
+      if (!useCitiesFetcher.data) return null;
+
+      return useCitiesFetcher.data.map((item: any) => (
+        <option key={item.codigo_ibge} value={item.nome}>
+          {item.nome}
+        </option>
+      ));
+    }
+  };
 
   const handleSave = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -37,7 +80,7 @@ function AccountProvider() {
     const request = await fetch(`${API_HOST}/me`, {
       method: "PUT",
       headers: requestHeader,
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, uf, city }),
     });
 
     const { error: requestError } = await request.json();
@@ -234,33 +277,36 @@ function AccountProvider() {
             </div>
 
             <div>
-              <label htmlFor="city" className={useClasses.label}>
-                Cidade
+              <label htmlFor="uf" className={useClasses.label}>
+                Estado*
               </label>
-              <input
-                name="city"
-                type="text"
-                className={useClasses.input}
-                value={data?.city || ""}
-                onChange={(e) =>
-                  setData((prev: any) => ({ ...prev, city: e.target.value }))
-                }
-              />
+              <select
+                required
+                name="uf"
+                value={uf}
+                className={useClasses.inputSelect}
+                onChange={(e) => setUf(e.target.value)}
+              >
+                <option value="">Selecione um...</option>
+                {renderUFComponent()}
+              </select>
             </div>
 
             <div>
-              <label htmlFor="uf" className={useClasses.label}>
-                Estado
+              <label htmlFor="city" className={useClasses.label}>
+                Cidade*
               </label>
               <input
-                name="uf"
-                type="text"
+                required
+                name="city"
+                list="cities"
+                placeholder="Cidades"
                 className={useClasses.input}
-                value={data?.uf || ""}
-                onChange={(e) =>
-                  setData((prev: any) => ({ ...prev, uf: e.target.value }))
-                }
+                disabled={!uf}
+                value={uf && city ? city : ""}
+                onChange={(e) => setCity(e.target.value)}
               />
+              <datalist id="cities">{renderCityComponent()}</datalist>
             </div>
 
             <div>
