@@ -106,7 +106,11 @@ function Login() {
                 <label htmlFor="password" className={useClasses.label}>
                   Senha
                 </label>
-                <input name="password" className={useClasses.input} />
+                <input
+                  type="password"
+                  name="password"
+                  className={useClasses.input}
+                />
               </div>
 
               <button type="submit" className={useClasses.button}>

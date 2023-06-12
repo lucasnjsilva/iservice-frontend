@@ -1,6 +1,13 @@
 const classes = {
   container: ["overflow-x-auto", "rounded-lg", "border", "border-gray-200"],
-  table: ["min-w-full", "divide-y-2", "divide-gray-200", "bg-white", "text-sm"],
+  table: [
+    "min-w-full",
+    "divide-y-2",
+    "divide-gray-200",
+    "bg-white",
+    "text-sm",
+    "overflow-hidden",
+  ],
   thead: ["ltr:text-left", "rtl:text-right", "bg-zinc-100"],
   th: ["whitespace-nowrap", "px-4", "py-3", "font-medium", "text-gray-900"],
   tbody: ["divide-y", "divide-gray-200", "text-center"],

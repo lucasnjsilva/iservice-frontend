@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
 import Layout from "@/app/layouts/authenticated";
@@ -10,6 +10,10 @@ import dateFormatter from "@/utils/dateFormatter";
 import { isAdmin } from "@/services/checkRole";
 import { useRouter } from "next/navigation";
 import isAuthenticated from "@/services/isAuthenticated";
+import { requestHeader } from "@/services/api";
+import useSWR from "swr";
+import phoneFormatter from "@/utils/phoneFormatter";
+import { AttendanceStatus } from "@/utils/dictionaries";
 
 const table = {
   head: [
@@ -47,13 +51,121 @@ const table = {
   ],
 };
 
+type StatsTypes = {
+  customers: number;
+  providers: number;
+  categories: number;
+  attendances: number;
+};
+
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+
+async function getStats() {
+  const customers = await fetch(`${API_HOST}/dashboard/total_customers`, {
+    headers: requestHeader,
+  });
+
+  const providers = await fetch(`${API_HOST}/dashboard/total_providers`, {
+    headers: requestHeader,
+  });
+
+  const categories = await fetch(`${API_HOST}/dashboard/total_categories`, {
+    headers: requestHeader,
+  });
+
+  const attendances = await fetch(`${API_HOST}/dashboard/total_attendances`, {
+    headers: requestHeader,
+  });
+
+  if (!customers.ok || !providers.ok || !categories.ok || !attendances.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  const totalCustomer = await customers.json();
+  const totalProvider = await providers.json();
+  const totalCategories = await categories.json();
+  const totalAttendances = await attendances.json();
+
+  return {
+    customers: totalCustomer.result.total,
+    providers: totalProvider.result.total,
+    categories: totalCategories.result.total,
+    attendances: totalAttendances.result.total,
+  };
+}
+
+const fetcher = (url: string) =>
+  fetch(url, { headers: requestHeader }).then((res) => res.json());
+
 function Dashboard() {
   const navigate = useRouter();
+  const useClasses = useStyle(classes);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<StatsTypes>({
+    customers: 0,
+    providers: 0,
+    categories: 0,
+    attendances: 0,
+  });
+  const [table, setTable] = useState({
+    head: [
+      "Profissional",
+      "Cliente",
+      "Serviço",
+      "Data de Solicitação",
+      "Data de Agendamento",
+      "Status",
+    ],
+    body: [],
+  });
+
+  const url = `${API_HOST}/attendances?limit=5`;
+  const useFetcher = useSWR(url, fetcher);
+
   useEffect(() => {
-    if (!isAuthenticated() && !isAdmin()) navigate.back();
+    if (!isAuthenticated() || !isAdmin()) {
+      navigate.back();
+    } else {
+      return setIsLoading(false);
+    }
   }, [navigate]);
 
-  const useClasses = useStyle(classes);
+  useEffect(() => {
+    getStats().then(({ customers, providers, categories, attendances }) => {
+      setStats({ customers, providers, categories, attendances });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (
+      useFetcher.error ||
+      useFetcher.isLoading ||
+      !useFetcher.data ||
+      !useFetcher.data.result
+    ) {
+      return;
+    }
+
+    const body = useFetcher.data.result.map((item: any) => ({
+      id: item.id,
+      customer: item.customer.name,
+      phone: phoneFormatter(item.customer.phone),
+      service: item.service.name,
+      solicitationDate: dateFormatter(item.solicitation_date),
+      scheduleDate: dateFormatter(item.attendance_date),
+      status: AttendanceStatus(item.status),
+    }));
+
+    setTable((prevState) => ({
+      ...prevState,
+      body,
+    }));
+  }, [useFetcher.data, useFetcher.error, useFetcher.isLoading]);
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <Layout title="Dashboard" admin={true}>
@@ -67,10 +179,10 @@ function Dashboard() {
         </h2>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
-          <StatsCard label="Clientes" stats="200" />
-          <StatsCard label="Prestadores" stats="500" />
-          <StatsCard label="Categorias" stats="23" />
-          <StatsCard label="Atendimentos" stats="133" />
+          <StatsCard label="Clientes" stats={stats.customers} />
+          <StatsCard label="Prestadores" stats={stats.providers} />
+          <StatsCard label="Categorias" stats={stats.categories} />
+          <StatsCard label="Atendimentos" stats={stats.attendances} />
         </div>
       </section>
 

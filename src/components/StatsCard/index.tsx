@@ -4,7 +4,7 @@ import classes from "./style";
 
 type PropTypes = {
   label: string;
-  stats: string;
+  stats: number;
 };
 
 function StatsCard({ label, stats }: PropTypes) {
