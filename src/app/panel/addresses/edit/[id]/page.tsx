@@ -51,13 +51,11 @@ function EditAddress() {
   }, [navigate]);
 
   useEffect(() => {
-    getData(id)
-      .then(({ result }) => {
-        setData(result);
-        setUf(result.uf);
-        setCity(result.city);
-      })
-      .catch(() => navigate.back());
+    getData(id).then(({ result }) => {
+      setData(result);
+      setUf(result.uf);
+      setCity(result.city);
+    });
   }, [navigate, id]);
 
   if (isLoading) {

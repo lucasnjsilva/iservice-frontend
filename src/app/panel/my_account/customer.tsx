@@ -26,9 +26,7 @@ function AccountCustomer() {
   const [error, setError] = useState<string>();
 
   useEffect(() => {
-    getData()
-      .then(({ result }) => setData(result))
-      .catch(() => navigate.back());
+    getData().then(({ result }) => setData(result));
   }, [navigate]);
 
   const handleSave = async (evt: React.FormEvent<HTMLFormElement>) => {

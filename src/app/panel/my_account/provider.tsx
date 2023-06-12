@@ -39,13 +39,11 @@ function AccountProvider() {
   const useCitiesFetcher = useSWR(citiesURL, uf ? citiesFetcher : null);
 
   useEffect(() => {
-    getData()
-      .then(({ result }) => {
-        setData(result);
-        setUf(result.uf);
-        setCity(result.city);
-      })
-      .catch(() => navigate.back());
+    getData().then(({ result }) => {
+      setData(result);
+      setUf(result.uf);
+      setCity(result.city);
+    });
   }, [navigate]);
 
   const renderUFComponent = () => {

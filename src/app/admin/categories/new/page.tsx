@@ -1,40 +1,77 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 import { isAdmin } from "@/services/checkRole";
 import { useRouter } from "next/navigation";
+import { requestHeader } from "@/services/api";
+import isAuthenticated from "@/services/isAuthenticated";
+
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
 function Categories() {
   const navigate = useRouter();
-  if (!isAdmin()) navigate.back();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isAuthenticated() || !isAdmin()) {
+      navigate.back();
+    } else {
+      return setIsLoading(false);
+    }
+  }, [navigate]);
 
   const useClasses = useStyle(classes);
 
-  const handleSave = () => {
-    console.log("Chegou aqui");
+  const handleSave = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    const formData = new FormData(evt.currentTarget);
+    const formValues: Record<string, string> = {};
+
+    formData.forEach((value, key) => {
+      formValues[key] = value as string;
+    });
+
+    const request = await fetch(`${API_HOST}/categories/`, {
+      method: "POST",
+      headers: requestHeader,
+      body: JSON.stringify(formValues),
+    });
+
+    const { error: requestError } = await request.json();
+
+    if (requestError) {
+      window.location.reload();
+
+      return alert(
+        "Ocorreu um erro ao tentar atualizar o nome da categoria, por favor, tente novamente."
+      );
+    }
+
+    navigate.back();
   };
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <Layout title="Criar Categoria" admin={true}>
-      <section>
+      <form onSubmit={handleSave}>
         <div className={useClasses.inputGroup}>
-          <label htmlFor="text" className={useClasses.label}>
+          <label htmlFor="name" className={useClasses.label}>
             Nome
           </label>
-          <input name="text" type="text" className={useClasses.input} />
+          <input name="name" type="text" className={useClasses.input} />
         </div>
 
-        <button
-          type="button"
-          className={useClasses.button}
-          onClick={() => handleSave()}
-        >
+        <button type="submit" className={useClasses.button}>
           Cadastrar
         </button>
-      </section>
+      </form>
     </Layout>
   );
 }
