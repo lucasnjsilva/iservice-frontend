@@ -38,6 +38,23 @@ export const admin = [
     ],
   },
   {
+    label: "Administradores",
+    href: null,
+    icon: <UsersIcon width={20} height={20} />,
+    items: [
+      {
+        label: "Listar",
+        href: "/admin/admins",
+        icon: <ListBulletIcon width={20} height={20} />,
+      },
+      {
+        label: "Criar nova",
+        href: "/admin/admins/new",
+        icon: <PlusIcon width={20} height={20} />,
+      },
+    ],
+  },
+  {
     label: "Clientes",
     href: "/admin/customers",
     icon: <UsersIcon width={20} height={20} />,
