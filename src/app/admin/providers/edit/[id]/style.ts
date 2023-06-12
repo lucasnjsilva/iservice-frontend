@@ -1,5 +1,7 @@
 const classes = {
-  form: ["mx-auto", "max-w-xl", "rounded-lg", "border"],
+  wrapper: ["flex", "lg:space-x-16", "max-lg:flex-col", "max-lg:space-y-8"],
+  form: ["rounded-lg", "border", "w-full"],
+  form2: ["rounded-lg", "border", "h-full", "w-full"],
   formGroup: ["flex", "flex-col", "gap-4", "p-4", "md:p-8"],
   label: ["mb-2", "inline-block", "text-sm", "text-gray-800", "sm:text-base"],
   input: [

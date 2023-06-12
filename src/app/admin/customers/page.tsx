@@ -40,7 +40,7 @@ function Customers() {
     totalItems: 0,
   });
 
-  const url = `${API_HOST}/customers?name=${filter.name}&email=${filter.email}&phone=${filter.phone}&page=${page}`;
+  const url = `${API_HOST}/customers?name=${filter.name}&email=${filter.email}&cpf=${filter.cpf}&phone=${filter.phone}&page=${page}`;
   const useFetcher = useSWR(url, fetcher);
 
   useEffect(() => {

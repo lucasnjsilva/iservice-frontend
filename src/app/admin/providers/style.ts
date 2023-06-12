@@ -2,7 +2,8 @@ const classes = {
   title: ["font-medium", "mb-2"],
   wrapper: ["flex", "space-x-4"],
   filters: ["mb-4"],
-  inputSearch: ["w-full", "p-2", "mb-4", "rounded-lg", "border"],
+  inputGroup: ["w-full"],
+  inputSearch: ["w-full", "p-2", "mb-4", "rounded-lg", "border", "bg-white"],
   buttonSearch: [
     "border",
     "border-emerald-600",
