@@ -1,18 +1,19 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import classes from "./style";
 import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { isAdmin } from "@/services/checkRole";
 import isAuthenticated from "@/services/isAuthenticated";
 import { requestHeader } from "@/services/api";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
-async function getData() {
-  const res = await fetch(`${API_HOST}/me`, { headers: requestHeader });
+async function getData(id: string) {
+  const res = await fetch(`${API_HOST}/admins/${id}`, {
+    headers: requestHeader,
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -21,33 +22,33 @@ async function getData() {
   return res.json();
 }
 
-function MyAccount() {
+function Edit() {
+  const { id } = useParams();
   const navigate = useRouter();
   const useClasses = useStyle(classes);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<any>();
   const [error, setError] = useState<string>();
-
-  useEffect(() => {
-    if (!isAuthenticated() || !isAdmin()) {
-      navigate.back();
-    } else {
-      return setIsLoading(false);
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    getData().then(({ result }) => setData(result));
-  }, [navigate]);
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
 
   const handleSave = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    const request = await fetch(`${API_HOST}/me`, {
+    const formData = new FormData(evt.currentTarget);
+    const formValues: Record<string, string> = {};
+
+    formData.forEach((value, key) => {
+      formValues[key] = value as string;
+    });
+
+    const request = await fetch(`${API_HOST}/admins/${id}`, {
       method: "PUT",
       headers: requestHeader,
-      body: JSON.stringify(data),
+      body: JSON.stringify(formValues),
     });
 
     const { error: requestError } = await request.json();
@@ -56,11 +57,11 @@ function MyAccount() {
       window.location.reload();
 
       return alert(
-        "Ocorreu um erro ao tentar atualizar seus dados, por favor, tente novamente."
+        "Ocorreu um erro ao tentar atualizar o nome da categoria, por favor, tente novamente."
       );
     }
 
-    window.location.reload();
+    navigate.back();
   };
 
   const handlePassword = async (evt: React.FormEvent<HTMLFormElement>) => {
@@ -96,12 +97,26 @@ function MyAccount() {
     window.location.reload();
   };
 
+  useEffect(() => {
+    if (!isAuthenticated() || !isAdmin()) {
+      navigate.back();
+    } else {
+      return setIsLoading(false);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    getData(id).then(({ result }) => {
+      setData(result);
+    });
+  }, [navigate, id]);
+
   if (isLoading) {
     return <div>Carregando...</div>;
   }
 
   return (
-    <Layout title="Minha Conta" admin={true}>
+    <Layout title="Editar categoria" admin={true}>
       <div className={useClasses.wrapper}>
         <form className={useClasses.form} onSubmit={handleSave}>
           <div className={useClasses.formGroup}>
@@ -113,10 +128,9 @@ function MyAccount() {
                 name="name"
                 type="text"
                 className={useClasses.input}
-                required
-                value={data?.name || ""}
+                value={data.name}
                 onChange={(e) =>
-                  setData((prev: any) => ({ ...prev, name: e.target.value }))
+                  setData((prev) => ({ ...prev, name: e.target.value }))
                 }
               />
             </div>
@@ -129,8 +143,8 @@ function MyAccount() {
                 name="email"
                 type="text"
                 className={useClasses.input}
+                value={data.email}
                 disabled
-                value={data?.email || ""}
               />
             </div>
 
@@ -142,9 +156,9 @@ function MyAccount() {
                 name="phone"
                 type="text"
                 className={useClasses.input}
-                value={data?.phone || ""}
+                value={data.phone}
                 onChange={(e) =>
-                  setData((prev: any) => ({ ...prev, phone: e.target.value }))
+                  setData((prev) => ({ ...prev, phone: e.target.value }))
                 }
               />
             </div>
@@ -192,4 +206,4 @@ function MyAccount() {
   );
 }
 
-export default MyAccount;
+export default Edit;

@@ -13,6 +13,8 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
 function Categories() {
   const navigate = useRouter();
+  const useClasses = useStyle(classes);
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,8 +24,6 @@ function Categories() {
       return setIsLoading(false);
     }
   }, [navigate]);
-
-  const useClasses = useStyle(classes);
 
   const handleSave = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -35,7 +35,7 @@ function Categories() {
       formValues[key] = value as string;
     });
 
-    const request = await fetch(`${API_HOST}/categories/`, {
+    const request = await fetch(`${API_HOST}/admins/`, {
       method: "POST",
       headers: requestHeader,
       body: JSON.stringify(formValues),
@@ -47,7 +47,7 @@ function Categories() {
       window.location.reload();
 
       return alert(
-        "Ocorreu um erro ao tentar cadastrar uma nova categoria, por favor, tente novamente."
+        "Ocorreu um erro ao tentar cadastrar um novo administrador, por favor, tente novamente."
       );
     }
 
@@ -65,7 +65,48 @@ function Categories() {
           <label htmlFor="name" className={useClasses.label}>
             Nome
           </label>
-          <input name="name" type="text" className={useClasses.input} />
+          <input
+            name="name"
+            type="text"
+            className={useClasses.input}
+            required
+          />
+        </div>
+
+        <div className={useClasses.inputGroup}>
+          <label htmlFor="email" className={useClasses.label}>
+            E-mail
+          </label>
+          <input
+            name="email"
+            type="text"
+            className={useClasses.input}
+            required
+          />
+        </div>
+
+        <div className={useClasses.inputGroup}>
+          <label htmlFor="password" className={useClasses.label}>
+            Senha
+          </label>
+          <input
+            name="password"
+            type="password"
+            className={useClasses.input}
+            required
+          />
+        </div>
+
+        <div className={useClasses.inputGroup}>
+          <label htmlFor="phone" className={useClasses.label}>
+            Telefone
+          </label>
+          <input
+            name="phone"
+            type="text"
+            className={useClasses.input}
+            required
+          />
         </div>
 
         <button type="submit" className={useClasses.button}>
