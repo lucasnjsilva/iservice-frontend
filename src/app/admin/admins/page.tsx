@@ -30,7 +30,7 @@ function Categories() {
     totalItems: 0,
   });
 
-  const url = `${API_HOST}/admins`;
+  const url = `${API_HOST}/admins?page=${page}`;
   const useFetcher = useSWR(url, fetcher);
 
   const handleEdit = (id: string) => navigate.push(`${pathname}/edit/${id}`);

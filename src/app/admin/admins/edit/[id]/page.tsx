@@ -74,7 +74,7 @@ function Edit() {
       formValues[key] = value as string;
     });
 
-    const request = await fetch(`${API_HOST}/me/password`, {
+    const request = await fetch(`${API_HOST}/me/password/${id}`, {
       method: "PUT",
       headers: requestHeader,
       body: JSON.stringify(formValues),
