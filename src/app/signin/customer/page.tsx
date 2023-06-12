@@ -128,6 +128,17 @@ function Login() {
                 </a>
               </p>
             </div>
+
+            <div className={useClasses.haventAccountGroup}>
+              <p className={useClasses.haventAccountText}>
+                <a
+                  href="/forgot_password/customer"
+                  className={useClasses.signupButton}
+                >
+                  Esqueceu sua senha?
+                </a>
+              </p>
+            </div>
           </form>
         </div>
       </div>

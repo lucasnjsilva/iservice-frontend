@@ -179,10 +179,26 @@ function Dashboard() {
         </h2>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-8">
-          <StatsCard label="Clientes" stats={stats.customers} />
-          <StatsCard label="Prestadores" stats={stats.providers} />
-          <StatsCard label="Categorias" stats={stats.categories} />
-          <StatsCard label="Atendimentos" stats={stats.attendances} />
+          <StatsCard
+            label="Clientes"
+            stats={stats.customers}
+            link="/admin/customers"
+          />
+          <StatsCard
+            label="Prestadores"
+            stats={stats.providers}
+            link="/admin/providers"
+          />
+          <StatsCard
+            label="Categorias"
+            stats={stats.categories}
+            link="/admin/categories"
+          />
+          <StatsCard
+            label="Atendimentos"
+            stats={stats.attendances}
+            link="/admin/attendances"
+          />
         </div>
       </section>
 
