@@ -38,7 +38,6 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
   id,
 }) => {
   const useClasses = useStyle(classes);
-  const [disabled, setDisabled] = useState(false);
   const [data, setData] = useState<{
     customer: string;
     phone: string;
@@ -57,7 +56,7 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
   }>();
 
   const url = `${API_HOST}/attendances/${id}`;
-  const useFetcher = useSWR(url, id ? fetcher : null);
+  const useFetcher = useSWR(url, id && isOpen ? fetcher : null);
 
   useEffect(() => {
     if (
@@ -78,14 +77,14 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
       solicitationDate: result.solicitation_date,
       scheduleDate: result.attendance_date,
       status: result.status,
-      address: result.customer.address.address,
-      number: result.customer.address.number,
-      complement: result.customer.address.complement,
-      neighborhood: result.customer.address.neighborhood,
-      reference: result.customer.address.reference,
-      city: result.customer.address.city,
-      uf: result.customer.address.uf,
-      cep: result.customer.address.cep,
+      address: result.address.address,
+      number: result.address.number,
+      complement: result.address.complement,
+      neighborhood: result.address.neighborhood,
+      reference: result.address.reference,
+      city: result.address.city,
+      uf: result.address.uf,
+      cep: result.address.cep,
     });
   }, [useFetcher.data, useFetcher.error, useFetcher.isLoading]);
 

@@ -115,7 +115,7 @@ function ProviderDashboard() {
       setItemId(id);
     }
 
-    setIsOpen((prevState) => !prevState);
+    setIsOpen(!isOpen);
   };
 
   const handleConfirm = async (id: string) => {
