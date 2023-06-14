@@ -9,6 +9,7 @@ import isAuthenticated from "@/services/isAuthenticated";
 import { requestHeader } from "@/services/api";
 import useSWR from "swr";
 import Pagination from "@/components/Pagination";
+import phoneFormatter from "@/utils/phoneFormatter";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -74,7 +75,7 @@ function Categories() {
       id: item.id,
       name: item.name,
       email: item.email,
-      phone: item.phone,
+      phone: phoneFormatter(item.phone),
     }));
 
     setTable((prevState) => ({

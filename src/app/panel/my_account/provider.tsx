@@ -180,15 +180,6 @@ function AccountProvider() {
               <label htmlFor="phone" className={useClasses.label}>
                 Telefone
               </label>
-              <input
-                name="phone"
-                type="text"
-                className={useClasses.input}
-                value={data?.phone || ""}
-                onChange={(e) =>
-                  setData((prev: any) => ({ ...prev, phone: e.target.value }))
-                }
-              />
               <InputMask
                 mask="(99) 99999-9999"
                 name="phone"
@@ -274,11 +265,11 @@ function AccountProvider() {
                 name="reference"
                 type="text"
                 className={useClasses.input}
-                value={data?.complement || ""}
+                value={data?.reference || ""}
                 onChange={(e) =>
                   setData((prev: any) => ({
                     ...prev,
-                    complement: e.target.value,
+                    reference: e.target.value,
                   }))
                 }
               />

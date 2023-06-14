@@ -12,6 +12,7 @@ import {
   BookOpenIcon,
   ArrowUturnLeftIcon,
 } from "@heroicons/react/24/outline";
+import { getUserId } from "@/services/isAuthenticated";
 
 export const admin = [
   {
@@ -126,6 +127,12 @@ export const provider = [
     label: "Minha Conta",
     href: "/panel/my_account",
     icon: <UserIcon width={20} height={20} />,
+    items: null,
+  },
+  {
+    label: "Meu Perfil",
+    href: `/provider/${getUserId()}`,
+    icon: <ArrowUturnLeftIcon width={20} height={20} />,
     items: null,
   },
   {

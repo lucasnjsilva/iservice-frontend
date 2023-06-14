@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { isAdmin } from "@/services/checkRole";
 import isAuthenticated from "@/services/isAuthenticated";
 import { requestHeader } from "@/services/api";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -138,9 +139,9 @@ function MyAccount() {
               <label htmlFor="phone" className={useClasses.label}>
                 Telefone
               </label>
-              <input
+              <InputMask
+                mask="(99) 99999-9999"
                 name="phone"
-                type="text"
                 className={useClasses.input}
                 value={data?.phone || ""}
                 onChange={(e) =>

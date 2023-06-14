@@ -8,6 +8,7 @@ import { isAdmin } from "@/services/checkRole";
 import { useRouter } from "next/navigation";
 import { requestHeader } from "@/services/api";
 import isAuthenticated from "@/services/isAuthenticated";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -104,6 +105,12 @@ function Categories() {
           <input
             name="phone"
             type="text"
+            className={useClasses.input}
+            required
+          />
+          <InputMask
+            mask="(99) 99999-9999"
+            name="phone"
             className={useClasses.input}
             required
           />

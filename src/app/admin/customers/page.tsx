@@ -13,6 +13,8 @@ import { requestHeader } from "@/services/api";
 import useSWR from "swr";
 import isAuthenticated from "@/services/isAuthenticated";
 import InputMask from "react-input-mask";
+import { cpfFormatter } from "@/utils/dataFormatter";
+import phoneFormatter from "@/utils/phoneFormatter";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -66,8 +68,8 @@ function Customers() {
       id: item.id,
       name: item.name,
       email: item.email,
-      cpf: item.cpf,
-      phone: item.phone,
+      cpf: cpfFormatter(item.cpf),
+      phone: phoneFormatter(item.phone),
     }));
 
     setTable((prevState) => ({

@@ -12,6 +12,8 @@ import useSWR from "swr";
 import isAuthenticated from "@/services/isAuthenticated";
 import { requestHeader } from "@/services/api";
 import InputMask from "react-input-mask";
+import { cnpjFormatter } from "@/utils/dataFormatter";
+import phoneFormatter from "@/utils/phoneFormatter";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -79,8 +81,8 @@ function Providers() {
       id: item.id,
       name: item.name,
       email: item.email,
-      cnpj: item.cnpj,
-      phone: item.phone,
+      cnpj: cnpjFormatter(item.cnpj),
+      phone: phoneFormatter(item.phone),
       city: item.city,
       uf: item.uf,
     }));
