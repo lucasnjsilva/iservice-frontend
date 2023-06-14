@@ -103,8 +103,9 @@ export default function Provider() {
                       <Image
                         alt="..."
                         src={
-                          (data && data.profile_image) ??
-                          "/assets/blank_profile.png"
+                          data && data.profile_image
+                            ? `${process.env.NEXT_PUBLIC_S3_BUCKET_PATH}/${data.profile_image}`
+                            : "/assets/blank_profile.png"
                         }
                         className={useClasses.image}
                         width={1000}

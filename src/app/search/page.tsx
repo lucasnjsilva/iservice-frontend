@@ -37,7 +37,11 @@ export default function Homepage() {
         <ProfessionalCard
           name={item.name}
           profission={item.provider.name}
-          profile={item.provider.profile_image ?? "/assets/blank_profile.png"}
+          profile={
+            item.provider.profile_image
+              ? `${process.env.NEXT_PUBLIC_S3_BUCKET_PATH}/${item.provider.profile_image}`
+              : "/assets/blank_profile.png"
+          }
         />
       </Link>
     ));

@@ -149,8 +149,9 @@ function Service() {
                     <Image
                       alt="..."
                       src={
-                        (data && data.provider.profile_image) ??
-                        "/assets/blank_profile.png"
+                        data && data.provider.profile_image
+                          ? `${process.env.NEXT_PUBLIC_S3_BUCKET_PATH}/${data.provider.profile_image}`
+                          : "/assets/blank_profile.png"
                       }
                       className={useClasses.image}
                       width={1000}

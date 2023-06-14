@@ -56,13 +56,16 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({
   useEffect(() => {
     if (providerId) {
       getData(providerId).then(({ result }) => setServices(result));
-      getAddresses().then(({ result }) => setAddresses(result));
     }
 
     if (serviceId) {
       setSelectedService(serviceId);
     }
-  }, [providerId, serviceId]);
+
+    if (isOpen) {
+      getAddresses().then(({ result }) => setAddresses(result));
+    }
+  }, [isOpen, providerId, serviceId]);
 
   const renderOptions = () => {
     if (services) {

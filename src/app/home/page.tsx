@@ -49,7 +49,9 @@ export default function Homepage() {
           name={service.provider.name}
           profission={service.name}
           profile={
-            service.provider.profile_image ?? "/assets/blank_profile.png"
+            service.provider.profile_image
+              ? `${process.env.NEXT_PUBLIC_S3_BUCKET_PATH}/${service.provider.profile_image}`
+              : "/assets/blank_profile.png"
           }
         />
       </Link>

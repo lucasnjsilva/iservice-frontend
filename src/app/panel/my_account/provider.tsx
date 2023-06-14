@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { requestHeader } from "@/services/api";
 import useSWR from "swr";
 import InputMask from "react-input-mask";
+import { getToken } from "@/services/isAuthenticated";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -29,7 +30,6 @@ function AccountProvider() {
   const navigate = useRouter();
   const [data, setData] = useState<any>();
   const [error, setError] = useState<string>();
-
   const [uf, setUf] = useState<string>();
   const [city, setCity] = useState<string>();
 
@@ -126,6 +126,58 @@ function AccountProvider() {
     }
 
     window.location.reload();
+  };
+
+  const handleProfile = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    const formData = new FormData();
+    const formElement = evt.currentTarget;
+    const fileElement = formElement.querySelector('input[name="profileImage"]');
+
+    if (fileElement instanceof HTMLInputElement && fileElement.files) {
+      const file = fileElement.files[0];
+      formData.append("profileImage", file);
+    }
+
+    const request = await fetch(`${API_HOST}/me`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    });
+
+    const { error: requestError } = await request.json();
+
+    if (requestError) {
+      setError(
+        requestError.message ||
+          "Ocorreu um erro ao tentar atualizar sua imagem de perfil, por favor, tente novamente."
+      );
+    } else {
+      alert("Alterada com sucesso.");
+      window.location.reload();
+    }
+  };
+
+  const deleteProfileImage = async (evt: any) => {
+    evt.preventDefault();
+
+    const request = await fetch(`${API_HOST}/providers/profile_image/delete`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+
+    const { error: requestError } = await request.json();
+
+    if (requestError) {
+      setError(
+        requestError.message ||
+          "Ocorreu um erro ao tentar deletar sua imagem de perfil, por favor, tente novamente."
+      );
+    } else {
+      alert("Deletado com sucesso.");
+      window.location.reload();
+    }
   };
 
   return (
@@ -356,6 +408,36 @@ function AccountProvider() {
 
             <button type="submit" className={useClasses.button}>
               Salvar
+            </button>
+          </div>
+        </form>
+
+        <form className={useClasses.form2} onSubmit={handleProfile}>
+          <div className={useClasses.formGroup}>
+            <div>
+              <label htmlFor="profileImage" className={useClasses.label}>
+                Imagem de perfil
+              </label>
+              <input
+                name="profileImage"
+                type="file"
+                className={useClasses.input}
+              />
+            </div>
+
+            <button type="submit" className={useClasses.button}>
+              Salvar
+            </button>
+
+            <hr className="mt-2 -mb-2" />
+
+            <button
+              type="button"
+              className={useClasses.button}
+              onClick={(e) => deleteProfileImage(e)}
+              disabled={data && data.profile_image === "" ? true : false}
+            >
+              Deletar imagem de perfil
             </button>
           </div>
         </form>

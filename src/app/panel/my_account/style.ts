@@ -57,6 +57,7 @@ const classes = {
     "focus-visible:ring",
     "active:bg-gray-600",
     "md:text-base",
+    "disabled:bg-gray-300",
   ],
 };
 
