@@ -13,6 +13,7 @@ import phoneFormatter from "@/utils/phoneFormatter";
 import { AttendanceStatus } from "@/utils/dictionaries";
 import Pagination from "@/components/Pagination";
 import { requestHeader } from "@/services/api";
+import EvaluationModal from "@/components/EvaluationModal";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -109,16 +110,72 @@ function CustomerDashboard() {
     }
   };
 
+  const handleConfirmEvaluation = async (payload: {
+    vote: number;
+    comment: string;
+    attendanceId: string;
+  }) => {
+    const request = await fetch(`${API_HOST}/evaluations`, {
+      method: "POST",
+      headers: requestHeader,
+      body: JSON.stringify(payload),
+    });
+
+    const response = await request.json();
+
+    if (response.status === "OK") window.location.reload();
+
+    if (response.error) {
+      alert(
+        "Ocorreu um erro ao tentar confirmar seu atendimento. Por favor, tente novamente."
+      );
+    }
+  };
+
+  const chooseModal = () => {
+    if (itemId) {
+      const item: any = lastSchedules.body.find(
+        (obj: any) => obj.id === itemId
+      );
+
+      if (item) {
+        if (item.status === "PENDENTE") {
+          return (
+            <CancelScheduleModal
+              id={itemId}
+              isOpen={isOpen}
+              onCancel={handleCancel}
+              onClose={handleModal}
+            />
+          );
+        }
+
+        if (item.status === "ATENDIDO") {
+          return (
+            <EvaluationModal
+              id={itemId}
+              isOpen={isOpen}
+              onConfirm={handleConfirmEvaluation}
+              onClose={handleModal}
+            />
+          );
+        }
+      }
+    }
+  };
+
   return (
     <>
-      <CancelScheduleModal
-        id={itemId}
-        isOpen={isOpen}
-        onCancel={handleCancel}
-        onClose={handleModal}
-      />
+      {chooseModal()}
 
       <Layout title="Dashboard">
+        <div className="text-emerald-700">
+          <p>
+            Você pode cancelar um agendamento ou avaliar um atendimento clicando
+            no botão editar na barra de ações na tabela.
+          </p>
+        </div>
+
         <div className="mt-16">
           <h2 className={useClasses.sectionTitle}>Últimos Agendamentos</h2>
           <Table
