@@ -9,6 +9,7 @@ import { isProvider } from "@/services/checkRole";
 import isAuthenticated from "@/services/isAuthenticated";
 import useSWR from "swr";
 import { requestHeader } from "@/services/api";
+import { NumericFormat } from "react-number-format";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const categoryFetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -60,6 +61,8 @@ function NewService() {
 
     formValues["category"] = category || "";
     formData.append("category", category || "");
+
+    formValues.cost = formValues.cost.replace(",", ".").replace("R$", "");
 
     const options = {
       method: "POST",
@@ -140,10 +143,14 @@ function NewService() {
           <label htmlFor="cost" className={useClasses.label}>
             Custo
           </label>
-          <input
+          <NumericFormat
+            decimalSeparator=","
+            prefix="R$ "
+            decimalScale={2}
+            fixedDecimalScale
+            allowNegative={false}
+            placeholder="R$ 0,00"
             name="cost"
-            type="text"
-            placeholder="Custo"
             className={useClasses.input}
             required
           />

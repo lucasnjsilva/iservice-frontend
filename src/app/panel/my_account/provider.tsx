@@ -7,6 +7,7 @@ import Layout from "@/app/layouts/authenticated";
 import { useRouter } from "next/navigation";
 import { requestHeader } from "@/services/api";
 import useSWR from "swr";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -151,9 +152,9 @@ function AccountProvider() {
               <label htmlFor="cnpj" className={useClasses.label}>
                 CNPJ
               </label>
-              <input
+              <InputMask
+                mask="99.999.999/9999-99"
                 name="cnpj"
-                type="text"
                 className={useClasses.input}
                 value={data?.cnpj || ""}
                 onChange={(e) =>
@@ -182,6 +183,15 @@ function AccountProvider() {
               <input
                 name="phone"
                 type="text"
+                className={useClasses.input}
+                value={data?.phone || ""}
+                onChange={(e) =>
+                  setData((prev: any) => ({ ...prev, phone: e.target.value }))
+                }
+              />
+              <InputMask
+                mask="(99) 99999-9999"
+                name="phone"
                 className={useClasses.input}
                 value={data?.phone || ""}
                 onChange={(e) =>

@@ -6,6 +6,7 @@ import useStyle from "@/utils/cssHandler";
 import Layout from "../../layouts/unauthenticated/index";
 import { useRouter } from "next/navigation";
 import isAuthenticated from "@/services/isAuthenticated";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -79,7 +80,11 @@ function CustomerSignUp() {
                 <label htmlFor="cpf" className={useClasses.label}>
                   CPF
                 </label>
-                <input name="cpf" type="text" className={useClasses.input} />
+                <InputMask
+                  mask="999.999.999-99"
+                  name="cpf"
+                  className={useClasses.input}
+                />
               </div>
 
               <div>
@@ -104,7 +109,11 @@ function CustomerSignUp() {
                 <label htmlFor="phone" className={useClasses.label}>
                   Telefone
                 </label>
-                <input name="phone" type="text" className={useClasses.input} />
+                <InputMask
+                  mask="(99) 99999-9999"
+                  name="phone"
+                  className={useClasses.input}
+                />
               </div>
 
               <button type="submit" className={useClasses.button}>

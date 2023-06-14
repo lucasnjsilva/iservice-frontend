@@ -12,6 +12,7 @@ import { isAdmin } from "@/services/checkRole";
 import { requestHeader } from "@/services/api";
 import useSWR from "swr";
 import isAuthenticated from "@/services/isAuthenticated";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -142,16 +143,16 @@ function Customers() {
               className={useClasses.inputSearch}
             />
 
-            <input
+            <InputMask
+              mask="999.999.999-99"
               name="cpf"
-              type="text"
               placeholder="CPF"
               className={useClasses.inputSearch}
             />
 
-            <input
+            <InputMask
+              mask="(99) 99999-9999"
               name="phone"
-              type="text"
               placeholder="Telefone"
               className={useClasses.inputSearch}
             />

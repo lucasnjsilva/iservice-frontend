@@ -7,6 +7,7 @@ import Layout from "../../layouts/unauthenticated/index";
 import { useRouter } from "next/navigation";
 import isAuthenticated from "@/services/isAuthenticated";
 import useSWR from "swr";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -160,16 +161,22 @@ function ProviderSignUp() {
                 <label htmlFor="phone" className={useClasses.label}>
                   Telefone*
                 </label>
-                <input name="phone" type="text" className={useClasses.input} />
+                <InputMask
+                  mask="(99) 99999-9999"
+                  name="phone"
+                  placeholder="Telefone"
+                  className={useClasses.input}
+                />
               </div>
 
               <div>
                 <label htmlFor="cnpj" className={useClasses.label}>
                   CNPJ*
                 </label>
-                <input
+                <InputMask
+                  mask="99.999.999/9999-99"
                   name="cnpj"
-                  type="text"
+                  placeholder="CNPJ"
                   className={useClasses.input}
                   required
                 />

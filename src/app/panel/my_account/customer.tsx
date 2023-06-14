@@ -6,6 +6,7 @@ import useStyle from "@/utils/cssHandler";
 import Layout from "@/app/layouts/authenticated";
 import { requestHeader } from "@/services/api";
 import { useRouter } from "next/navigation";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -108,9 +109,9 @@ function AccountCustomer() {
               <label htmlFor="cpf" className={useClasses.label}>
                 CPF
               </label>
-              <input
+              <InputMask
+                mask="999.999.999-99"
                 name="cpf"
-                type="text"
                 className={useClasses.input}
                 value={data?.cpf || ""}
                 disabled
@@ -134,9 +135,9 @@ function AccountCustomer() {
               <label htmlFor="phone" className={useClasses.label}>
                 Telefone
               </label>
-              <input
+              <InputMask
+                mask="(99) 99999-9999"
                 name="phone"
-                type="text"
                 className={useClasses.input}
                 value={data?.phone || ""}
                 onChange={(e) =>

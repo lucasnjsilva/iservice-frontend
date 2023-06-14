@@ -11,6 +11,7 @@ import { isAdmin } from "@/services/checkRole";
 import useSWR from "swr";
 import isAuthenticated from "@/services/isAuthenticated";
 import { requestHeader } from "@/services/api";
+import InputMask from "react-input-mask";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
@@ -22,8 +23,6 @@ const citiesFetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function Providers() {
   const navigate = useRouter();
-  if (!isAdmin()) navigate.back();
-
   const useClasses = useStyle(classes);
   const pathname = usePathname();
 
@@ -190,16 +189,16 @@ function Providers() {
               className={useClasses.inputSearch}
             />
 
-            <input
+            <InputMask
+              mask="99.999.999/9999-99"
               name="cnpj"
-              type="text"
               placeholder="CNPJ"
               className={useClasses.inputSearch}
             />
 
-            <input
+            <InputMask
+              mask="(99) 99999-9999"
               name="phone"
-              type="text"
               placeholder="Telefone"
               className={useClasses.inputSearch}
             />

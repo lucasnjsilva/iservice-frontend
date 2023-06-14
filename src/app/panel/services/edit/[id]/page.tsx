@@ -8,6 +8,7 @@ import { isProvider } from "@/services/checkRole";
 import isAuthenticated from "@/services/isAuthenticated";
 import useSWR from "swr";
 import { requestHeader } from "@/services/api";
+import { NumericFormat } from "react-number-format";
 
 interface IData {
   name: string;
@@ -35,12 +36,14 @@ function Edit() {
   const useDataFetcher = useSWR(dataURL, dataFetcher);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
   const [data, setData] = useState<IData>({
     name: "",
     description: "",
     category: "",
     cost: "",
   });
+  console.log(data);
 
   useEffect(() => {
     if (!isAuthenticated() || !isProvider()) {
@@ -61,7 +64,7 @@ function Edit() {
       name: result.name,
       description: result.description,
       category: result.category.name,
-      cost: result.cost,
+      cost: String(result.cost).replace(".", ","),
     });
   }, [useDataFetcher.data, useDataFetcher.error, useDataFetcher.isLoading]);
 
@@ -84,13 +87,22 @@ function Edit() {
   const handleSave = async (evt: React.MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
 
+    if (!data.name || !data.category || !data.cost) {
+      return setError(
+        "Preencha os campos obrigatórios marcados com *, por favor."
+      );
+    }
+
     const request = await fetch(`${API_HOST}/services/${id}`, {
       method: "PUT",
       headers: requestHeader,
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        ...data,
+        cost: data.cost.replace(",", ".").replace("R$", ""),
+      }),
     });
 
-    const { error: requestError, result } = await request.json();
+    const { error: requestError } = await request.json();
 
     if (requestError) {
       return alert(
@@ -105,9 +117,10 @@ function Edit() {
     <Layout title="Editar serviço" admin={false}>
       <form className={useClasses.form}>
         <div className={useClasses.formGroup}>
+          {error ? <p className="text-sm text-red-500">{error}</p> : null}
           <div>
             <label htmlFor="name" className={useClasses.label}>
-              Nome
+              Nome*
             </label>
             <input
               name="name"
@@ -137,7 +150,7 @@ function Edit() {
 
           <div>
             <label htmlFor="services" className={useClasses.label}>
-              Categorias
+              Categorias*
             </label>
 
             <input
@@ -152,15 +165,20 @@ function Edit() {
 
           <div>
             <label htmlFor="cost" className={useClasses.label}>
-              Custo
+              Custo*
             </label>
-            <input
+            <NumericFormat
+              decimalSeparator=","
+              prefix="R$ "
+              decimalScale={2}
+              fixedDecimalScale
+              allowNegative={false}
+              placeholder="R$ 0,00"
               name="cost"
-              type="text"
-              placeholder="Custo"
               className={useClasses.input}
               value={data.cost || ""}
               onChange={(e) => setData({ ...data, cost: e.target.value })}
+              required
             />
           </div>
 
