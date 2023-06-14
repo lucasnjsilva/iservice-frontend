@@ -81,6 +81,25 @@ const classes = {
     "sm:w-auto",
     "sm:text-sm",
   ],
+  radioInput: ["peer", "hidden", "[&:checked_+_label_svg]:block"],
+  radioLabel: [
+    "flex",
+    "cursor-pointer",
+    "items-center",
+    "justify-between",
+    "rounded-lg",
+    "border",
+    "border-gray-100",
+    "bg-white",
+    "p-4",
+    "text-sm",
+    "font-medium",
+    "shadow-sm",
+    "hover:border-gray-200",
+    "peer-checked:border-blue-500",
+    "peer-checked:ring-1",
+    "peer-checked:ring-blue-500",
+  ],
 };
 
 export default classes;

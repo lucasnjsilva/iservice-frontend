@@ -58,8 +58,17 @@ function Service() {
 
   const handleCloseModal = () => setIsOpen(!isOpen);
 
-  const onConfirm = async (id: string, date: string) => {
-    const payload = { serviceId: id, attendanceDate: date };
+  const onConfirm = async (
+    selectedService: string,
+    selectedAddress: string,
+    date: string
+  ) => {
+    const payload = {
+      serviceId: selectedService,
+      addressId: selectedAddress,
+      attendanceDate: date,
+    };
+
     const request = await fetch(`${API_HOST}/attendances`, {
       method: "POST",
       headers: requestHeader,
@@ -92,7 +101,7 @@ function Service() {
           />
         ))
       );
-    } else return <p>Sem avaliações até o momento.</p>;
+    }
   };
 
   const renderModal = () => {

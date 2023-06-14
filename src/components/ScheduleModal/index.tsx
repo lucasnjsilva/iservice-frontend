@@ -4,6 +4,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useStyle from "@/utils/cssHandler";
 import classes from "./style";
+import { requestHeader } from "@/services/api";
 
 type ScheduleModalProps = {
   isOpen: boolean;
@@ -25,6 +26,18 @@ async function getData(id: string) {
   return res.json();
 }
 
+async function getAddresses() {
+  const res = await fetch(`${API_HOST}/customer_addresses`, {
+    headers: requestHeader,
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
 const ScheduleModal: React.FC<ScheduleModalProps> = ({
   isOpen,
   onClose,
@@ -34,17 +47,20 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({
 }) => {
   const useClasses = useStyle(classes);
   const [services, setServices] = useState<any>();
-  const [selected, setSelected] = useState<string>();
+  const [selectedService, setSelectedService] = useState<string>();
+  const [addresses, setAddresses] = useState<any>();
+  const [selectedAddress, setSelectedAddress] = useState<string>();
   const [date, setDate] = useState<string>("");
   const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (providerId) {
       getData(providerId).then(({ result }) => setServices(result));
+      getAddresses().then(({ result }) => setAddresses(result));
     }
 
     if (serviceId) {
-      setSelected(serviceId);
+      setSelectedService(serviceId);
     }
   }, [providerId, serviceId]);
 
@@ -58,12 +74,56 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({
     }
   };
 
+  const renderAddressOptions = () => {
+    if (addresses) {
+      return addresses.map((address: any) => (
+        <div key={address.id}>
+          <input
+            type="radio"
+            id={`address-${address.id}`}
+            className={useClasses.radioInput}
+            value={address.id}
+            onChange={(e) => setSelectedAddress(e.target.value)}
+            checked={selectedAddress === address.id}
+          />
+
+          <label
+            htmlFor={`address-${address.id}`}
+            className={useClasses.radioLabel}
+          >
+            <div className="flex items-center gap-2">
+              <svg
+                className="hidden h-5 w-5 text-blue-600"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+
+              <p className="text-gray-700">
+                {address.address}, {address.number}. {address.complement} -
+                Bairro {address.neighborhood}. (Referência: {address.reference})
+              </p>
+            </div>
+          </label>
+        </div>
+      ));
+    }
+  };
+
   const handleConfirm = () => {
-    if (selected && date) {
-      onConfirm(selected, date);
+    if (selectedService && selectedAddress && date) {
+      onConfirm(selectedService, selectedAddress, date);
       onClose();
     } else {
-      setError("Selecione um serviço e uma data para fazer um agendamento.");
+      setError(
+        "Selecione um serviço, um endereço e uma data para fazer um agendamento."
+      );
     }
   };
 
@@ -108,13 +168,25 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({
                 <select
                   id="service"
                   className={useClasses.input}
-                  value={serviceId ? selected : ""}
+                  value={serviceId ? selectedService : ""}
                   disabled={serviceId ? true : false}
-                  onChange={(e) => setSelected(e.target.value)}
+                  onChange={(e) => setSelectedService(e.target.value)}
                 >
                   <option value="blank">Selecione o serviço</option>
                   {renderOptions()}
                 </select>
+              </div>
+
+              <div className="mt-8">
+                <label htmlFor="service" className={useClasses.label}>
+                  Selecione o endereço
+                </label>
+
+                <fieldset className="space-y-4 -mt-4">
+                  <legend className="sr-only">Endereços</legend>
+
+                  {renderAddressOptions()}
+                </fieldset>
               </div>
 
               <div className="my-8">
