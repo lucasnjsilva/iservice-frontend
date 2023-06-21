@@ -42,6 +42,11 @@ export default function Provider() {
     }
   }, [slug]);
 
+  const switchModal = () => {
+    return disabled
+      ? alert("Para fazer um agendamento, entre com o perfil de cliente.")
+      : handleModal();
+  };
   const handleModal = () => setIsOpen(!isOpen);
 
   const onConfirm = async (id: string, date: string) => {
@@ -141,8 +146,7 @@ export default function Provider() {
                       </p>
                       <button
                         className={useClasses.scheduleButton}
-                        disabled={disabled}
-                        onClick={handleModal}
+                        onClick={switchModal}
                       >
                         Agendar serviço
                       </button>

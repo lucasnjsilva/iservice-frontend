@@ -56,6 +56,12 @@ function Service() {
     }
   }, [slug]);
 
+  const switchModal = () => {
+    return disabled
+      ? alert("Para fazer um agendamento, entre com o perfil de cliente.")
+      : handleCloseModal();
+  };
+
   const handleCloseModal = () => setIsOpen(!isOpen);
 
   const onConfirm = async (
@@ -187,11 +193,7 @@ function Service() {
                   </p>
 
                   <div>
-                    <button
-                      className={useClasses.button}
-                      onClick={handleCloseModal}
-                      disabled={disabled}
-                    >
+                    <button className={useClasses.button} onClick={switchModal}>
                       Agendar serviço
                     </button>
                   </div>
