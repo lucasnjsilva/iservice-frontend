@@ -49,9 +49,11 @@ function Service() {
     getData(slug).then(({ result }) => setData(result));
     getAttendances(slug).then(({ result }) => setAttendances(result));
 
-    if (isCustomer()) {
+    if (isAuthenticated() && isCustomer()) {
       setDisabled(false);
-    } else {
+    }
+
+    if (isAuthenticated() && !isCustomer()) {
       setDisabled(true);
     }
   }, [slug]);

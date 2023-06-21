@@ -35,9 +35,11 @@ export default function Provider() {
   useEffect(() => {
     getData(slug).then(({ result }) => setData(result));
 
-    if (isCustomer()) {
+    if (isAuthenticated() && isCustomer()) {
       setDisabled(false);
-    } else {
+    }
+
+    if (isAuthenticated() && !isCustomer()) {
       setDisabled(true);
     }
   }, [slug]);
