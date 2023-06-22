@@ -207,7 +207,7 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
           >
             <div className={useClasses.dialogBody}>
               <Dialog.Title as="h3" className={useClasses.dialogTitle}>
-                Deseja aceitar ou recusar este agendamento?
+                Como deseja marcar este agendamento?
               </Dialog.Title>
               <hr className="mt-4" />
 
@@ -220,7 +220,7 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
                   onClick={() => handleConfirm(id)}
                   disabled={data && data.status !== "PENDING"}
                 >
-                  Confirmar
+                  Atendido
                 </button>
 
                 <button
@@ -229,7 +229,7 @@ const StatusScheduleModal: React.FC<StatusScheduleModalProps> = ({
                   onClick={() => handleRefuse(id)}
                   disabled={data && data.status !== "PENDING"}
                 >
-                  Recusar
+                  Cancelado
                 </button>
 
                 <button
