@@ -55,7 +55,9 @@ function Providers() {
   const citiesURL = `https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`;
   const useCitiesFetcher = useSWR(citiesURL, uf ? citiesFetcher : null);
 
-  const urlFilter = `name=${filter.name}&email=${filter.email}&cnpj=${filter.cnpj}&phone=${filter.phone}&uf=${filter.uf}&city=${filter.city}&page=${page}`;
+  const filterCNPJ = filter.cnpj.trim().replace(/[^0-9 ]|\s/g, "");
+  const filterPhone = filter.phone.trim().replace(/[^0-9 ]|\s/g, "");
+  const urlFilter = `name=${filter.name}&email=${filter.email}&cnpj=${filterCNPJ}&phone=${filterPhone}&uf=${filter.uf}&city=${filter.city}&page=${page}`;
   const url = `${API_HOST}/providers?${urlFilter}`;
   const useFetcher = useSWR(url, fetcher);
 

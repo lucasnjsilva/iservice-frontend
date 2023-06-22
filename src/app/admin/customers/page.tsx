@@ -43,7 +43,9 @@ function Customers() {
     totalItems: 0,
   });
 
-  const url = `${API_HOST}/customers?name=${filter.name}&email=${filter.email}&cpf=${filter.cpf}&phone=${filter.phone}&page=${page}`;
+  const filterCPF = filter.cpf.trim().replace(/[^0-9 ]|\s/g, "");
+  const filterPhone = filter.phone.trim().replace(/[^0-9 ]|\s/g, "");
+  const url = `${API_HOST}/customers?name=${filter.name}&email=${filter.email}&cpf=${filterCPF}&phone=${filterPhone}&page=${page}`;
   const useFetcher = useSWR(url, fetcher);
 
   useEffect(() => {
